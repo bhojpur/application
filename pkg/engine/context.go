@@ -1,4 +1,4 @@
-package cmd
+package engine
 
 // Copyright (c) 2018 Bhojpur Consulting Private Limited, India. All rights reserved.
 
@@ -21,40 +21,43 @@ package cmd
 // THE SOFTWARE.
 
 import (
-	"fmt"
-	"os"
+	"net/http"
 
-	log "github.com/sirupsen/logrus"
-	"github.com/spf13/cobra"
+	orm "github.com/bhojpur/orm/pkg/engine"
 )
 
-var verbose bool
-
-// rootCmd represents the base command when called without any subcommands
-var rootCmd = &cobra.Command{
-	Use:   "appsvr",
-	Short: "Bhojpur AppEngine is a distributed enterprise application management server",
-	PersistentPreRun: func(cmd *cobra.Command, args []string) {
-		if verbose {
-			log.SetLevel(log.DebugLevel)
-			log.Debug("verbose logging enabled")
-		}
-	},
-
-	// Uncomment the following line if your bare application
-	// has an action associated with it:
-	//	Run: func(cmd *cobra.Command, args []string) { },
+// CurrentUser is an interface, which is used by Bhojpur Apps services to get current logged in user
+type CurrentUser interface {
+	DisplayName() string
 }
 
-// Execute adds all child commands to the root command and sets flags appropriately.
-// This is called by main.main(). It only needs to happen once to the rootCmd.
-func Execute() {
-	if err := rootCmd.Execute(); err != nil {
-		fmt.Println(err)
-		os.Exit(1)
+// Context Apps context, which is used for many components, used to share information between them
+type Context struct {
+	Request     *http.Request
+	Writer      http.ResponseWriter
+	CurrentUser CurrentUser
+	Roles       []string
+	ResourceID  string
+	DB          *orm.DB
+	Config      *Config
+	Errors
+}
+
+// Clone clone current context
+func (context *Context) Clone() *Context {
+	var clone = *context
+	return &clone
+}
+
+// GetDB get database from current context
+func (context *Context) GetDB() *orm.DB {
+	if context.DB != nil {
+		return context.DB
 	}
+	return context.Config.DB
 }
 
-func init() {
-	rootCmd.PersistentFlags().BoolVar(&verbose, "verbose", false, "en/disable verbose logging")
+// SetDB set database into current context
+func (context *Context) SetDB(db *orm.DB) {
+	context.DB = db
 }

@@ -1,4 +1,4 @@
-package cmd
+package roles
 
 // Copyright (c) 2018 Bhojpur Consulting Private Limited, India. All rights reserved.
 
@@ -20,41 +20,31 @@ package cmd
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import (
-	"fmt"
-	"os"
+// Permissioner permissioner interface
+type Permissioner interface {
+	HasPermission(mode PermissionMode, roles ...interface{}) bool
+}
 
-	log "github.com/sirupsen/logrus"
-	"github.com/spf13/cobra"
-)
-
-var verbose bool
-
-// rootCmd represents the base command when called without any subcommands
-var rootCmd = &cobra.Command{
-	Use:   "appsvr",
-	Short: "Bhojpur AppEngine is a distributed enterprise application management server",
-	PersistentPreRun: func(cmd *cobra.Command, args []string) {
-		if verbose {
-			log.SetLevel(log.DebugLevel)
-			log.Debug("verbose logging enabled")
+// ConcatPermissioner concat permissioner
+func ConcatPermissioner(ps ...Permissioner) Permissioner {
+	var newPS []Permissioner
+	for _, p := range ps {
+		if p != nil {
+			newPS = append(newPS, p)
 		}
-	},
-
-	// Uncomment the following line if your bare application
-	// has an action associated with it:
-	//	Run: func(cmd *cobra.Command, args []string) { },
-}
-
-// Execute adds all child commands to the root command and sets flags appropriately.
-// This is called by main.main(). It only needs to happen once to the rootCmd.
-func Execute() {
-	if err := rootCmd.Execute(); err != nil {
-		fmt.Println(err)
-		os.Exit(1)
 	}
+	return permissioners(newPS)
 }
 
-func init() {
-	rootCmd.PersistentFlags().BoolVar(&verbose, "verbose", false, "en/disable verbose logging")
+type permissioners []Permissioner
+
+// HasPermission check has permission for permissioners or not
+func (ps permissioners) HasPermission(mode PermissionMode, roles ...interface{}) bool {
+	for _, p := range ps {
+		if p != nil && !p.HasPermission(mode, roles) {
+			return false
+		}
+	}
+
+	return true
 }

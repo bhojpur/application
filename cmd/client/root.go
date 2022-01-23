@@ -61,8 +61,8 @@ var rootCmdOpts struct {
 
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
-	Use:   "application",
-	Short: "Bhojpur Application is an elastic software suite powered by Kubernetes",
+	Use:   "appctl",
+	Short: "Bhojpur AppControl is a distributed enterprise application client engine",
 	PersistentPreRun: func(cmd *cobra.Command, args []string) {
 		if verbose {
 			log.SetLevel(log.DebugLevel)

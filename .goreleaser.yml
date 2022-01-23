@@ -1,0 +1,61 @@
+before:
+  hooks:
+    - go generate -v ./...
+builds:
+- id: appsvr
+  env:
+  - CGO_ENABLED=0
+  main: server.go
+  binary: appsvr
+  ldflags:
+  - -s -w -X github.com/bhojpur/application/cmd/server.version={{.Version}}-{{.ShortCommit}}
+- id: applicationctl
+  env:
+  - CGO_ENABLED=0
+  main: client.go
+  binary: appctl
+  flags:
+    - -tags=appctl
+  ldflags:
+  - -s -w -X github.com/bhojpur/application/cmd/client.version={{.Version}}-{{.ShortCommit}}
+archives:
+- id: appsvr
+  replacements:
+    darwin: Darwin
+    linux: Linux
+    386: i386
+    amd64: x86_64
+  builds:
+  - appsvr
+- id: appctl
+  files:
+  - "none*"
+  format: binary
+  builds:
+  - appctl
+  replacements:
+    darwin: Darwin
+    linux: Linux
+    386: i386
+    amd64: x86_64
+checksum:
+  name_template: 'checksums.txt'
+snapshot:
+  name_template: "{{ .Tag }}-next"
+changelog:
+  sort: asc
+  filters:
+    exclude:
+    - '^docs:'
+    - '^test:'
+release:
+  prerelease: auto
+dockers:
+  - goos: linux
+    goarch: amd64
+    goarm: ''
+    dockerfile: Dockerfile
+    image_templates:
+    - "ghcr.io/bhojpur/application:{{ .Tag }}"
+    extra_files:
+    - README.md

@@ -1,4 +1,4 @@
-package cmd
+package engine
 
 // Copyright (c) 2018 Bhojpur Consulting Private Limited, India. All rights reserved.
 
@@ -21,40 +21,46 @@ package cmd
 // THE SOFTWARE.
 
 import (
-	"fmt"
-	"os"
-
-	log "github.com/sirupsen/logrus"
-	"github.com/spf13/cobra"
+	"strings"
 )
 
-var verbose bool
-
-// rootCmd represents the base command when called without any subcommands
-var rootCmd = &cobra.Command{
-	Use:   "appsvr",
-	Short: "Bhojpur AppEngine is a distributed enterprise application management server",
-	PersistentPreRun: func(cmd *cobra.Command, args []string) {
-		if verbose {
-			log.SetLevel(log.DebugLevel)
-			log.Debug("verbose logging enabled")
-		}
-	},
-
-	// Uncomment the following line if your bare application
-	// has an action associated with it:
-	//	Run: func(cmd *cobra.Command, args []string) { },
+// Errors is a struct that used to hold errors array
+type Errors struct {
+	errors []error
 }
 
-// Execute adds all child commands to the root command and sets flags appropriately.
-// This is called by main.main(). It only needs to happen once to the rootCmd.
-func Execute() {
-	if err := rootCmd.Execute(); err != nil {
-		fmt.Println(err)
-		os.Exit(1)
+// Error get formatted error message
+func (errs Errors) Error() string {
+	var errors []string
+	for _, err := range errs.errors {
+		errors = append(errors, err.Error())
+	}
+	return strings.Join(errors, "; ")
+}
+
+// AddError add error to Errors struct
+func (errs *Errors) AddError(errors ...error) {
+	for _, err := range errors {
+		if err != nil {
+			if e, ok := err.(errorsInterface); ok {
+				errs.errors = append(errs.errors, e.GetErrors()...)
+			} else {
+				errs.errors = append(errs.errors, err)
+			}
+		}
 	}
 }
 
-func init() {
-	rootCmd.PersistentFlags().BoolVar(&verbose, "verbose", false, "en/disable verbose logging")
+// HasError return has error or not
+func (errs Errors) HasError() bool {
+	return len(errs.errors) != 0
+}
+
+// GetErrors return error array
+func (errs Errors) GetErrors() []error {
+	return errs.errors
+}
+
+type errorsInterface interface {
+	GetErrors() []error
 }

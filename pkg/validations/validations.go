@@ -1,4 +1,4 @@
-package cmd
+package validations
 
 // Copyright (c) 2018 Bhojpur Consulting Private Limited, India. All rights reserved.
 
@@ -22,39 +22,29 @@ package cmd
 
 import (
 	"fmt"
-	"os"
 
-	log "github.com/sirupsen/logrus"
-	"github.com/spf13/cobra"
+	orm "github.com/bhojpur/orm/pkg/engine"
 )
 
-var verbose bool
-
-// rootCmd represents the base command when called without any subcommands
-var rootCmd = &cobra.Command{
-	Use:   "appsvr",
-	Short: "Bhojpur AppEngine is a distributed enterprise application management server",
-	PersistentPreRun: func(cmd *cobra.Command, args []string) {
-		if verbose {
-			log.SetLevel(log.DebugLevel)
-			log.Debug("verbose logging enabled")
-		}
-	},
-
-	// Uncomment the following line if your bare application
-	// has an action associated with it:
-	//	Run: func(cmd *cobra.Command, args []string) { },
+// NewError generate a new error for a model's field
+func NewError(resource interface{}, column, err string) error {
+	return &Error{Resource: resource, Column: column, Message: err}
 }
 
-// Execute adds all child commands to the root command and sets flags appropriately.
-// This is called by main.main(). It only needs to happen once to the rootCmd.
-func Execute() {
-	if err := rootCmd.Execute(); err != nil {
-		fmt.Println(err)
-		os.Exit(1)
-	}
+// Error is a validation error struct that hold model, column and error message
+type Error struct {
+	Resource interface{}
+	Column   string
+	Message  string
 }
 
-func init() {
-	rootCmd.PersistentFlags().BoolVar(&verbose, "verbose", false, "en/disable verbose logging")
+// Label is a label including model type, primary key and column name
+func (err Error) Label() string {
+	scope := orm.Scope{Value: err.Resource}
+	return fmt.Sprintf("%v_%v_%v", scope.GetModelStruct().ModelType.Name(), scope.PrimaryKeyValue(), err.Column)
+}
+
+// Error show error message
+func (err Error) Error() string {
+	return fmt.Sprintf("%v", err.Message)
 }
