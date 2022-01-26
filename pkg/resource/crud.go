@@ -137,7 +137,7 @@ func (res *Resource) findOneHandler(result interface{}, metaValues *MetaValues, 
 func (res *Resource) findManyHandler(result interface{}, context *appsvr.Context) error {
 	if res.HasPermission(roles.Read, context) {
 		db := context.GetDB()
-		if _, ok := db.Get("qor:getting_total_count"); ok {
+		if _, ok := db.Get("bhojpur:getting_total_count"); ok {
 			return context.GetDB().Count(result).Error
 		}
 		return context.GetDB().Set("gorm:order_by_primary_key", "DESC").Find(result).Error

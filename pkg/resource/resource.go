@@ -44,12 +44,12 @@ type Resourcer interface {
 
 // ConfigureResourceBeforeInitializeInterface if a struct implemented this interface, it will be called before everything when create a resource with the struct
 type ConfigureResourceBeforeInitializeInterface interface {
-	ConfigureQorResourceBeforeInitialize(Resourcer)
+	ConfigureBhojpurResourceBeforeInitialize(Resourcer)
 }
 
 // ConfigureResourceInterface if a struct implemented this interface, it will be called after configured by user
 type ConfigureResourceInterface interface {
-	ConfigureQorResource(Resourcer)
+	ConfigureBhojpurResource(Resourcer)
 }
 
 // Resource is a struct that including basic definition of Bhojpur Application resource

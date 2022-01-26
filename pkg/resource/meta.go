@@ -75,12 +75,12 @@ type Metaor interface {
 
 // ConfigureMetaBeforeInitializeInterface if a struct's field's type implemented this interface, it will be called when initializing a meta
 type ConfigureMetaBeforeInitializeInterface interface {
-	ConfigureQorMetaBeforeInitialize(Metaor)
+	ConfigureBhojpurMetaBeforeInitialize(Metaor)
 }
 
 // ConfigureMetaInterface if a struct's field's type implemented this interface, it will be called after configed
 type ConfigureMetaInterface interface {
-	ConfigureQorMeta(Metaor)
+	ConfigureBhojpurMeta(Metaor)
 }
 
 // MetaConfigInterface meta configuration interface
@@ -92,8 +92,8 @@ type MetaConfigInterface interface {
 type MetaConfig struct {
 }
 
-// ConfigureQorMeta implement the MetaConfigInterface
-func (MetaConfig) ConfigureQorMeta(Metaor) {
+// ConfigureBhojpurMeta implement the MetaConfigInterface
+func (MetaConfig) ConfigureBhojpurMeta(Metaor) {
 }
 
 // Meta meta struct definition
