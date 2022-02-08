@@ -15,7 +15,7 @@ Initialization requires five parameters, which are all string type:
 | endpoint         | Yes  | Bhojpur IAM Server URL, such as `http://localhost:8000` |
 | clientId         | Yes  | Application.client_id                                   |
 | clientSecret     | Yes  | Application.client_secret                               |
-| jwtSecret        | Yes  | Same as Casdoor JWT secret.                             |
+| jwtSecret        | Yes  | Same as Bhojpur IAM JWT secret                          |
 | organizationName | Yes  | Application.organization                                |
 
 ```go

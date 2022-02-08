@@ -32,6 +32,6 @@ var (
 )
 
 const (
-	// VERSION represent Bhojpur Application - Development Framework version.
-	VERSION = "0.0.3"
+	// VERSION represent Bhojpur Application - Foundation Framework version.
+	VERSION = "0.0.4"
 )

@@ -1,6 +1,6 @@
 {
     "name": "bhojpur-js-sdk",
-    "version": "0.0.3",
+    "version": "0.0.4",
     "description": "A simple Javascript client-side SDK for the Bhojpur IAM",
     "main": "lib/cjs/index.js",
     "typings": "lib/cjs/index.d.ts",
