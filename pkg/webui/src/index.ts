@@ -1,5 +1,3 @@
-package pkg
-
 // Copyright (c) 2018 Bhojpur Consulting Private Limited, India. All rights reserved.
 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -20,18 +18,6 @@ package pkg
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-var (
-	BuildVersion     string
-	BuildGitRevision string
-	BuildStatus      string
-	BuildTag         string
-	BuildTime        string
+import sdk from './sdk';
 
-	GoVersion string
-	GitBranch string
-)
-
-const (
-	// VERSION represent Bhojpur Application - Development Framework version.
-	VERSION = "0.0.3"
-)
+export default sdk;

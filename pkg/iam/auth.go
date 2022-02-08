@@ -1,4 +1,4 @@
-package pkg
+package iam
 
 // Copyright (c) 2018 Bhojpur Consulting Private Limited, India. All rights reserved.
 
@@ -20,18 +20,27 @@ package pkg
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-var (
-	BuildVersion     string
-	BuildGitRevision string
-	BuildStatus      string
-	BuildTag         string
-	BuildTime        string
+// AuthConfig is the core configuration.
+// The first step to use this Bhojpur IAM SDK is to use the InitConfig function
+// to initialize the global authConfig.
+type AuthConfig struct {
+	Endpoint         string
+	ClientId         string
+	ClientSecret     string
+	JwtPublicKey     string
+	OrganizationName string
+	ApplicationName  string
+}
 
-	GoVersion string
-	GitBranch string
-)
+var authConfig AuthConfig
 
-const (
-	// VERSION represent Bhojpur Application - Development Framework version.
-	VERSION = "0.0.3"
-)
+func InitConfig(endpoint string, clientId string, clientSecret string, jwtPublicKey string, organizationName string, applicationName string) {
+	authConfig = AuthConfig{
+		Endpoint:         endpoint,
+		ClientId:         clientId,
+		ClientSecret:     clientSecret,
+		JwtPublicKey:     jwtPublicKey,
+		OrganizationName: organizationName,
+		ApplicationName:  applicationName,
+	}
+}

@@ -1,4 +1,4 @@
-package pkg
+package iam
 
 // Copyright (c) 2018 Bhojpur Consulting Private Limited, India. All rights reserved.
 
@@ -20,18 +20,41 @@ package pkg
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-var (
-	BuildVersion     string
-	BuildGitRevision string
-	BuildStatus      string
-	BuildTag         string
-	BuildTime        string
-
-	GoVersion string
-	GitBranch string
+import (
+	"bytes"
+	"fmt"
+	"io"
+	"mime/multipart"
+	"strings"
 )
 
-const (
-	// VERSION represent Bhojpur Application - Development Framework version.
-	VERSION = "0.0.3"
-)
+func getUrl(action string, queryMap map[string]string) string {
+	query := ""
+	for k, v := range queryMap {
+		query += fmt.Sprintf("%s=%s&", k, v)
+	}
+	query = strings.TrimRight(query, "&")
+
+	url := fmt.Sprintf("%s/api/%s?%s", authConfig.Endpoint, action, query)
+	return url
+}
+
+func createForm(formData map[string][]byte) (string, io.Reader, error) {
+	body := new(bytes.Buffer)
+	w := multipart.NewWriter(body)
+	defer w.Close()
+
+	for k, v := range formData {
+		pw, err := w.CreateFormFile(k, "file")
+		if err != nil {
+			panic(err)
+		}
+
+		_, err = pw.Write(v)
+		if err != nil {
+			panic(err)
+		}
+	}
+
+	return w.FormDataContentType(), body, nil
+}

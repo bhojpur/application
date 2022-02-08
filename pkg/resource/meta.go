@@ -73,12 +73,14 @@ type Metaor interface {
 	HasPermission(roles.PermissionMode, *appsvr.Context) bool
 }
 
-// ConfigureMetaBeforeInitializeInterface if a struct's field's type implemented this interface, it will be called when initializing a meta
+// ConfigureMetaBeforeInitializeInterface if a struct's field's type implemented this
+// interface, it will be called when initializing a meta
 type ConfigureMetaBeforeInitializeInterface interface {
 	ConfigureBhojpurMetaBeforeInitialize(Metaor)
 }
 
-// ConfigureMetaInterface if a struct's field's type implemented this interface, it will be called after configed
+// ConfigureMetaInterface if a struct's field's type implemented this interface, it
+// will be called after configed
 type ConfigureMetaInterface interface {
 	ConfigureBhojpurMeta(Metaor)
 }
@@ -110,47 +112,47 @@ type Meta struct {
 	Permission      *roles.Permission
 }
 
-// GetBaseResource get base resource from meta
+// GetBaseResource gets base resource from meta
 func (meta Meta) GetBaseResource() Resourcer {
 	return meta.BaseResource
 }
 
-// GetName get meta's name
+// GetName gets meta's name
 func (meta Meta) GetName() string {
 	return meta.Name
 }
 
-// GetFieldName get meta's field name
+// GetFieldName gets meta's field name
 func (meta Meta) GetFieldName() string {
 	return meta.FieldName
 }
 
-// SetFieldName set meta's field name
+// SetFieldName sets meta's field name
 func (meta *Meta) SetFieldName(name string) {
 	meta.FieldName = name
 }
 
-// GetSetter get setter from meta
+// GetSetter gets setter from meta
 func (meta Meta) GetSetter() func(resource interface{}, metaValue *MetaValue, context *appsvr.Context) {
 	return meta.Setter
 }
 
-// SetSetter set setter to meta
+// SetSetter sets setter to meta
 func (meta *Meta) SetSetter(fc func(resource interface{}, metaValue *MetaValue, context *appsvr.Context)) {
 	meta.Setter = fc
 }
 
-// GetValuer get valuer from meta
+// GetValuer gets valuer from meta
 func (meta Meta) GetValuer() func(interface{}, *appsvr.Context) interface{} {
 	return meta.Valuer
 }
 
-// SetValuer set valuer for meta
+// SetValuer sets valuer for meta
 func (meta *Meta) SetValuer(fc func(interface{}, *appsvr.Context) interface{}) {
 	meta.Valuer = fc
 }
 
-// GetFormattedValuer get formatted valuer from meta
+// GetFormattedValuer gets formatted valuer from meta
 func (meta *Meta) GetFormattedValuer() func(interface{}, *appsvr.Context) interface{} {
 	if meta.FormattedValuer != nil {
 		return meta.FormattedValuer
@@ -163,7 +165,7 @@ func (meta *Meta) SetFormattedValuer(fc func(interface{}, *appsvr.Context) inter
 	meta.FormattedValuer = fc
 }
 
-// HasPermission check has permission or not
+// HasPermission checks, has permission or not
 func (meta Meta) HasPermission(mode roles.PermissionMode, context *appsvr.Context) bool {
 	if meta.Permission == nil {
 		return true
@@ -219,7 +221,7 @@ func (meta *Meta) PreInitialize() error {
 	return nil
 }
 
-// Initialize initialize meta, will set valuer, setter if haven't configure it
+// Initialize initializes meta, will set valuer, setter if haven't configure it
 func (meta *Meta) Initialize() error {
 	// Set Valuer for Meta
 	if meta.Valuer == nil {

@@ -1,4 +1,4 @@
-package pkg
+package iam
 
 // Copyright (c) 2018 Bhojpur Consulting Private Limited, India. All rights reserved.
 
@@ -20,18 +20,34 @@ package pkg
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-var (
-	BuildVersion     string
-	BuildGitRevision string
-	BuildStatus      string
-	BuildTag         string
-	BuildTime        string
-
-	GoVersion string
-	GitBranch string
+import (
+	"encoding/json"
+	"fmt"
 )
 
-const (
-	// VERSION represent Bhojpur Application - Development Framework version.
-	VERSION = "0.0.3"
-)
+type smsForm struct {
+	Content   string   `json:"content"`
+	Receivers []string `json:"receivers"`
+}
+
+func SendSms(content string, receivers ...string) error {
+	form := smsForm{
+		Content:   content,
+		Receivers: receivers,
+	}
+	postBytes, err := json.Marshal(form)
+	if err != nil {
+		return err
+	}
+
+	resp, err := doPost("send-sms", nil, postBytes, false)
+	if err != nil {
+		return err
+	}
+
+	if resp.Status != "ok" {
+		return fmt.Errorf(resp.Msg)
+	}
+
+	return nil
+}

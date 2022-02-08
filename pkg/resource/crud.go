@@ -140,7 +140,7 @@ func (res *Resource) findManyHandler(result interface{}, context *appsvr.Context
 		if _, ok := db.Get("bhojpur:getting_total_count"); ok {
 			return context.GetDB().Count(result).Error
 		}
-		return context.GetDB().Set("gorm:order_by_primary_key", "DESC").Find(result).Error
+		return context.GetDB().Set("orm:order_by_primary_key", "DESC").Find(result).Error
 	}
 
 	return roles.ErrPermissionDenied

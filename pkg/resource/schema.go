@@ -178,7 +178,7 @@ func ConvertFormToMetaValues(request *http.Request, metaors []Metaor, prefix str
 	return metaValues, nil
 }
 
-// Decode decode context to result according to resource definition
+// Decode decodes context to result according to resource definition
 func Decode(context *appsvr.Context, result interface{}, res Resourcer) error {
 	var errors appsvr.Errors
 	var err error

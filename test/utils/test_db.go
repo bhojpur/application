@@ -122,7 +122,7 @@ func AutoMigrate(db *orm.DB, givenTables ...interface{}) {
 }
 
 // Migratable defines interface for implementing post-migration
-// actions such as adding constraints that arent's supported by Gorm's
+// actions such as adding constraints that arent's supported by ORM's
 // struct tags. This function must be idempotent, since it will most
 // likely be executed multiple times.
 type Migratable interface {

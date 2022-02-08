@@ -1,4 +1,4 @@
-package pkg
+package iam
 
 // Copyright (c) 2018 Bhojpur Consulting Private Limited, India. All rights reserved.
 
@@ -20,18 +20,38 @@ package pkg
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-var (
-	BuildVersion     string
-	BuildGitRevision string
-	BuildStatus      string
-	BuildTag         string
-	BuildTime        string
-
-	GoVersion string
-	GitBranch string
+import (
+	"encoding/json"
+	"fmt"
 )
 
-const (
-	// VERSION represent Bhojpur Application - Development Framework version.
-	VERSION = "0.0.3"
-)
+type emailForm struct {
+	Title     string   `json:"title"`
+	Content   string   `json:"content"`
+	Sender    string   `json:"sender"`
+	Receivers []string `json:"receivers"`
+}
+
+func SendEmail(title string, content string, sender string, receivers ...string) error {
+	form := emailForm{
+		Title:     title,
+		Content:   content,
+		Sender:    sender,
+		Receivers: receivers,
+	}
+	postBytes, err := json.Marshal(form)
+	if err != nil {
+		return err
+	}
+
+	resp, err := doPost("send-email", nil, postBytes, false)
+	if err != nil {
+		return err
+	}
+
+	if resp.Status != "ok" {
+		return fmt.Errorf(resp.Msg)
+	}
+
+	return nil
+}

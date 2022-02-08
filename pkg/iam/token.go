@@ -1,4 +1,4 @@
-package pkg
+package iam
 
 // Copyright (c) 2018 Bhojpur Consulting Private Limited, India. All rights reserved.
 
@@ -20,18 +20,37 @@ package pkg
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-var (
-	BuildVersion     string
-	BuildGitRevision string
-	BuildStatus      string
-	BuildTag         string
-	BuildTime        string
+import (
+	"context"
+	"errors"
+	"fmt"
+	"strings"
 
-	GoVersion string
-	GitBranch string
+	"golang.org/x/oauth2"
 )
 
-const (
-	// VERSION represent Bhojpur Application - Development Framework version.
-	VERSION = "0.0.3"
-)
+// GetOAuthToken gets the pivotal and necessary secret to interact with the Bhojpur IAM server
+func GetOAuthToken(code string, state string) (*oauth2.Token, error) {
+	config := oauth2.Config{
+		ClientID:     authConfig.ClientId,
+		ClientSecret: authConfig.ClientSecret,
+		Endpoint: oauth2.Endpoint{
+			AuthURL:   fmt.Sprintf("%s/api/login/oauth/authorize", authConfig.Endpoint),
+			TokenURL:  fmt.Sprintf("%s/api/login/oauth/access_token", authConfig.Endpoint),
+			AuthStyle: oauth2.AuthStyleInParams,
+		},
+		//RedirectURL: redirectUri,
+		Scopes: nil,
+	}
+
+	token, err := config.Exchange(context.Background(), code)
+	if err != nil {
+		return token, err
+	}
+
+	if strings.HasPrefix(token.AccessToken, "error:") {
+		return nil, errors.New(strings.TrimLeft(token.AccessToken, "error: "))
+	}
+
+	return token, err
+}
