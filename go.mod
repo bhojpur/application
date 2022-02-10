@@ -6,7 +6,7 @@ require (
 	github.com/bhojpur/errors v0.0.3
 	github.com/bhojpur/orm v0.0.1
 	github.com/go-sql-driver/mysql v1.6.0
-	github.com/golang-jwt/jwt/v4 v4.1.0
+	github.com/golang-jwt/jwt/v4 v4.3.0
 	github.com/gosimple/slug v1.12.0
 	github.com/lib/pq v1.10.4
 	github.com/mattn/go-sqlite3 v1.14.10
