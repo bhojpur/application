@@ -1,4 +1,6 @@
-package iam
+//go:generate gopherjs build --minify bhojpur.go
+
+package main
 
 // Copyright (c) 2018 Bhojpur Consulting Private Limited, India. All rights reserved.
 
@@ -21,36 +23,19 @@ package iam
 // THE SOFTWARE.
 
 import (
-	"fmt"
-
-	"github.com/golang-jwt/jwt/v4"
+	apipkg "github.com/bhojpur/application/pkg"
+	"github.com/gopherjs/gopherjs/js"
 )
 
-type Claims struct {
-	User
-	AccessToken string `json:"accessToken"`
-	jwt.RegisteredClaims
+func main() {
+	js.Global.Set("version", web_version)
+	js.Module.Get(`exports`).Set(`version`, api_version)
 }
 
-func ParseJwtToken(token string) (*Claims, error) {
-	t, err := jwt.ParseWithClaims(token, &Claims{}, func(token *jwt.Token) (interface{}, error) {
-		if _, ok := token.Method.(*jwt.SigningMethodRSA); !ok {
-			return nil, fmt.Errorf("unexpected signing method: %v", token.Header["alg"])
-		}
+func web_version() {
+	js.Global.Get("document").Call("write", apipkg.VERSION)
+}
 
-		publicKey, err := jwt.ParseRSAPublicKeyFromPEM([]byte(authConfig.JwtPublicKey))
-		if err != nil {
-			return nil, err
-		}
-
-		return publicKey, nil
-	})
-
-	if t != nil {
-		if claims, ok := t.Claims.(*Claims); ok && t.Valid {
-			return claims, nil
-		}
-	}
-
-	return nil, err
+func api_version() string {
+	return apipkg.VERSION
 }

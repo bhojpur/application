@@ -14,38 +14,47 @@ tasks:
         cmds:
         - GOFLAGS=-mod=mod go build -o bin/appctl client.go 
         - GOFLAGS=-mod=mod go build -o bin/appsvr server.go 
+        - GOFLAGS=-mod=mod go generate ./pkg/webui/...
 
-    build-desktop:
+    build-darwin:
         desc: Build the desktop application for current OS
         cmds:
-        - fyne package -os macos -icon application.png
-        - fyne package -os linux -icon application.png
-        - fyne package -os windows -icon application.png
+        - guiutl package -name "Bhojpur Application" -os darwin -icon internal/Icon.png
+
+    build-linux:
+        desc: Build the desktop application for current OS
+        cmds:
+        - guiutl package -name "Bhojpur Application" -os linux -icon internal/Icon.png
+
+    build-windows:
+        desc: Build the desktop application for current OS
+        cmds:
+        - guiutl package -name "Bhojpur Application" -os windows -icon internal/Icon.png
 
     package-android:
         desc: Package the mobile application for Android
         cmds:
-        - fyne package -os android -appID net.bhojpur.application -icon application.png
+        - guiutl package -os android -appID net.bhojpur.application -icon internal/Icon.png
 
     package-ios:
         desc: Package the mobile application for iOS
         cmds:
-        - fyne package -os ios -appID net.bhojpur.application -icon application.png
+        - guiutl package -os ios -appID net.bhojpur.application -icon internal/Icon.png
 
     release-macos:
         desc: Release the native application for macOS App Store
         cmds:
-        - fyne release -appID net.bhojpur.application -appVersion 1.0 -appBuild 1 -category business
+        - guiutl release -appID net.bhojpur.application -appVersion 1.0 -appBuild 1 -category business
 
     release-android:
         desc: Release the mobile application for Google Play
         cmds:
-        - fyne release -os android -appID net.bhojpur.application -appVersion 1.0 -appBuild 1
+        - guiutl release -os android -appID net.bhojpur.application -appVersion 1.0 -appBuild 1
 
     release-ios:
         desc: Release the mobile application for iOS App Store
         cmds:
-        - fyne release -os ios -appID net.bhojpur.application -appVersion 1.0 -appBuild 1
+        - guiutl release -os ios -appID net.bhojpur.application -appVersion 1.0 -appBuild 1
 
     run-web-server:
         desc: Run the web server application from source code
