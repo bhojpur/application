@@ -9,3 +9,14 @@ It features [Bhojpur IAM](https://github.com/bhojpur/iam) integration to support
 ## Server-side Entitlement Framework
 
 It features [Bhojpur CMS](https://github.com/bhojpur/cms) integration to support application-level entitlement management.
+
+## Application Runtime Engine
+
+The [Bhojpur Application](https://github.com/bhojpur/application) `runtime engine` features
+managing execution of micro-services developed in a wide range of `programming languages`. 
+
+## Command Line Interface
+
+The [Bhojpur Application](https://github.com/bhojpur/application) CLI is a client-side
+command & control engine to manage [Bhojpur Application](https://github.com/bhojpur/application)
+`runtime engine` instances in a distributed environment.

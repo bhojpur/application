@@ -1,0 +1,10 @@
+apiVersion: bhojpur.net/v1alpha1
+kind: Configuration
+metadata:
+  name: appsystem
+  namespace: default
+spec:
+  mtls:
+    enabled: true
+    workloadCertTTL: "25s"
+    allowedClockSkew: "1h"

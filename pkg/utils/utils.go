@@ -21,12 +21,20 @@ package utils
 // THE SOFTWARE.
 
 import (
+	"bufio"
+	"context"
 	"database/sql/driver"
+	"encoding/json"
 	"errors"
+	"flag"
 	"fmt"
+	"io"
+	"io/ioutil"
+	"net"
 	"net/http"
 	"net/url"
 	"os"
+	"os/exec"
 	"path"
 	"path/filepath"
 	"reflect"
@@ -34,6 +42,7 @@ import (
 	"runtime"
 	"runtime/debug"
 	"sort"
+	"strings"
 	"time"
 
 	appsvr "github.com/bhojpur/application/pkg/engine"
@@ -42,7 +51,27 @@ import (
 	"github.com/gosimple/slug"
 	"github.com/microcosm-cc/bluemonday"
 
-	"strings"
+	"github.com/docker/docker/client"
+	"github.com/gocarina/gocsv"
+	"github.com/olekukonko/tablewriter"
+	"gopkg.in/yaml.v2"
+
+	corev1 "k8s.io/api/core/v1"
+	"k8s.io/client-go/kubernetes"
+	"k8s.io/client-go/rest"
+	"k8s.io/client-go/tools/clientcmd"
+	"k8s.io/client-go/util/homedir"
+)
+
+const (
+	socketFormat = "%s/app-%s-%s.socket"
+)
+
+var (
+	clientSet  *kubernetes.Clientset
+	kubeConfig *rest.Config
+
+	envRegexp = regexp.MustCompile(`(?m)(,)\s*[a-zA-Z\_][a-zA-Z0-9\_]*=`)
 )
 
 // AppRoot app root path
@@ -363,7 +392,7 @@ func SortFormKeys(strs []string) {
 	})
 }
 
-// GetAbsURL get absolute URL from request, refer: https://stackoverflow.com/questions/6899069/why-are-request-url-host-and-scheme-blank-in-the-development-server
+// GetAbsURL get absolute URL from request
 func GetAbsURL(req *http.Request) url.URL {
 	if req.URL.IsAbs() {
 		return *req.URL
@@ -415,4 +444,282 @@ func SafeJoin(paths ...string) (string, error) {
 	}
 
 	return result, nil
+}
+
+func initKubeConfig() {
+	kubeConfig = GetConfig()
+	clientset, err := kubernetes.NewForConfig(kubeConfig)
+	if err != nil {
+		panic(err)
+	}
+
+	clientSet = clientset
+}
+
+// GetConfig gets a kubernetes rest config.
+func GetConfig() *rest.Config {
+	if kubeConfig != nil {
+		return kubeConfig
+	}
+
+	var kubeconfig *string
+	if home := homedir.HomeDir(); home != "" {
+		kubeconfig = flag.String("kubeconfig", filepath.Join(home, ".kube", "config"), "(optional) absolute path to the kubeconfig file")
+	} else {
+		kubeconfig = flag.String("kubeconfig", "", "absolute path to the kubeconfig file")
+	}
+	flag.Parse()
+
+	conf, err := rest.InClusterConfig()
+	if err != nil {
+		conf, err = clientcmd.BuildConfigFromFlags("", *kubeconfig)
+		if err != nil {
+			panic(err)
+		}
+	}
+
+	return conf
+}
+
+// GetKubeClient gets a kubernetes client.
+func GetKubeClient() *kubernetes.Clientset {
+	if clientSet == nil {
+		initKubeConfig()
+	}
+
+	return clientSet
+}
+
+// ToISO8601DateTimeString converts dateTime to ISO8601 Format
+// ISO8601 Format: 2020-01-01T01:01:01.10101Z.
+func ToISO8601DateTimeString(dateTime time.Time) string {
+	return dateTime.UTC().Format("2006-01-02T15:04:05.999999Z")
+}
+
+// add env-vars from annotations.
+func ParseEnvString(envStr string) []corev1.EnvVar {
+	indexes := envRegexp.FindAllStringIndex(envStr, -1)
+	lastEnd := len(envStr)
+	parts := make([]string, len(indexes)+1)
+	for i := len(indexes) - 1; i >= 0; i-- {
+		parts[i+1] = strings.TrimSpace(envStr[indexes[i][0]+1 : lastEnd])
+		lastEnd = indexes[i][0]
+	}
+	parts[0] = envStr[0:lastEnd]
+
+	envVars := make([]corev1.EnvVar, 0)
+	for _, s := range parts {
+		pairs := strings.Split(strings.TrimSpace(s), "=")
+		if len(pairs) != 2 {
+			continue
+		}
+		envVars = append(envVars, corev1.EnvVar{
+			Name:  pairs[0],
+			Value: pairs[1],
+		})
+	}
+
+	return envVars
+}
+
+// StringSliceContains return true if an array containe the "str" string.
+func StringSliceContains(needle string, haystack []string) bool {
+	for _, item := range haystack {
+		if item == needle {
+			return true
+		}
+	}
+	return false
+}
+
+// PrintTable to print in the table format.
+func PrintTable(csvContent string) {
+	WriteTable(os.Stdout, csvContent)
+}
+
+// WriteTable writes the csv table to writer.
+func WriteTable(writer io.Writer, csvContent string) {
+	table := tablewriter.NewWriter(writer)
+	table.SetHeaderAlignment(tablewriter.ALIGN_LEFT)
+	table.SetBorder(false)
+	table.SetHeaderLine(false)
+	table.SetRowLine(false)
+	table.SetCenterSeparator("")
+	table.SetRowSeparator("")
+	table.SetColumnSeparator("")
+	table.SetAlignment(tablewriter.ALIGN_LEFT)
+	scanner := bufio.NewScanner(strings.NewReader(csvContent))
+	header := true
+
+	for scanner.Scan() {
+		text := strings.Split(scanner.Text(), ",")
+
+		if header {
+			table.SetHeader(text)
+			header = false
+		} else {
+			table.Append(text)
+		}
+	}
+
+	table.Render()
+}
+
+func TruncateString(str string, maxLength int) string {
+	strLength := len(str)
+	if strLength <= maxLength {
+		return str
+	}
+
+	return str[0:maxLength-3] + "..."
+}
+
+func RunCmdAndWait(name string, args ...string) (string, error) {
+	cmd := exec.Command(name, args...)
+
+	stdout, err := cmd.StdoutPipe()
+	if err != nil {
+		return "", err
+	}
+	stderr, err := cmd.StderrPipe()
+	if err != nil {
+		return "", err
+	}
+
+	err = cmd.Start()
+	if err != nil {
+		return "", err
+	}
+
+	resp, err := ioutil.ReadAll(stdout)
+	if err != nil {
+		return "", err
+	}
+	errB, err := ioutil.ReadAll(stderr)
+	if err != nil {
+		return "", nil
+	}
+
+	err = cmd.Wait()
+	if err != nil {
+		// in case of error, capture the exact message
+		if len(errB) > 0 {
+			return "", errors.New(string(errB))
+		}
+		return "", err
+	}
+
+	return string(resp), nil
+}
+
+func CreateContainerName(serviceContainerName string, dockerNetwork string) string {
+	if dockerNetwork != "" {
+		return fmt.Sprintf("%s_%s", serviceContainerName, dockerNetwork)
+	}
+
+	return serviceContainerName
+}
+
+func CreateDirectory(dir string) error {
+	if _, err := os.Stat(dir); !os.IsNotExist(err) {
+		return nil
+	}
+	return os.Mkdir(dir, 0777)
+}
+
+// IsDockerInstalled checks whether docker is installed/running.
+func IsDockerInstalled() bool {
+	// nolint:staticcheck
+	cli, err := client.NewEnvClient()
+	if err != nil {
+		return false
+	}
+	_, err = cli.Ping(context.Background())
+	return err == nil
+}
+
+// IsAppListeningOnPort checks if Bhojpur Application is litening to a given port.
+func IsAppListeningOnPort(port int, timeout time.Duration) error {
+	start := time.Now()
+	for {
+		host := fmt.Sprintf("127.0.0.1:%v", port)
+		conn, err := net.DialTimeout("tcp", host, timeout)
+		if err == nil {
+			conn.Close()
+			return nil
+		}
+
+		if time.Since(start).Seconds() >= timeout.Seconds() {
+			// Give up.
+			return err
+		}
+
+		time.Sleep(time.Second)
+	}
+}
+
+func IsAppListeningOnSocket(socket string, timeout time.Duration) error {
+	start := time.Now()
+	for {
+		conn, err := net.DialTimeout("unix", socket, timeout)
+		if err == nil {
+			conn.Close()
+			return nil
+		}
+
+		if time.Since(start).Seconds() >= timeout.Seconds() {
+			// Give up.
+			return err
+		}
+
+		time.Sleep(time.Second)
+	}
+}
+
+func MarshalAndWriteTable(writer io.Writer, in interface{}) error {
+	table, err := gocsv.MarshalString(in)
+	if err != nil {
+		return err
+	}
+
+	WriteTable(writer, table)
+	return nil
+}
+
+func PrintDetail(writer io.Writer, outputFormat string, list interface{}) error {
+	obj := list
+	s := reflect.ValueOf(list)
+	if s.Kind() == reflect.Slice && s.Len() == 1 {
+		obj = s.Index(0).Interface()
+	}
+
+	var err error
+	output := []byte{}
+
+	switch outputFormat {
+	case "yaml":
+		output, err = yaml.Marshal(obj)
+	case "json":
+		output, err = json.MarshalIndent(obj, "", "  ")
+	}
+	if err != nil {
+		return err
+	}
+
+	_, err = writer.Write(output)
+	return err
+}
+
+func IsAddressLegal(address string) bool {
+	var isLegal bool
+	if address == "localhost" {
+		isLegal = true
+	} else if net.ParseIP(address) != nil {
+		isLegal = true
+	}
+	return isLegal
+}
+
+func GetSocket(path, appID, protocol string) string {
+	return fmt.Sprintf(socketFormat, path, appID, protocol)
 }

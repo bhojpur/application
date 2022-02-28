@@ -29,6 +29,12 @@ import (
 	_ "k8s.io/client-go/plugin/pkg/client/auth/gcp"
 )
 
+// Values for version and apiVersion are injected by the build.
+var (
+	version    = ""
+	apiVersion = "1.0"
+)
+
 func main() {
-	cmd.Execute()
+	cmd.Execute(version, apiVersion)
 }

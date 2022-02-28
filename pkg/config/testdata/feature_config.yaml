@@ -1,0 +1,10 @@
+apiVersion: bhojpur.net/v1alpha1
+kind: Configuration
+metadata:
+  name: appConfig
+spec:
+  features:
+  - name: Actor.Reentrancy
+    enabled: true
+  - name: Test.Feature
+    enabled: false
