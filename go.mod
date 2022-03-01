@@ -18,7 +18,7 @@ require (
 	github.com/gopherjs/gopherjs v0.0.0-20220221023154-0b2280d3ff96
 	github.com/gosimple/slug v1.12.0
 	github.com/grpc-ecosystem/go-grpc-middleware v1.3.0
-	github.com/hashicorp/go-retryablehttp v0.5.3
+	github.com/hashicorp/go-retryablehttp v0.7.0
 	github.com/hashicorp/go-version v1.4.0
 	github.com/lib/pq v1.10.4
 	github.com/mattn/go-sqlite3 v1.14.10
