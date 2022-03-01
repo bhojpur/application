@@ -125,7 +125,7 @@ var componentCategoriesNeedProcess = []ComponentCategory{
 	configurationComponent,
 }
 
-var log = logger.NewLogger("dapr.runtime")
+var log = logger.NewLogger("app.runtime")
 
 // ErrUnexpectedEnvelopeData denotes that an unexpected data type
 // was encountered when processing a cloud event's data property.
@@ -175,7 +175,7 @@ type AppRuntime struct {
 	scopedSubscriptions    map[string][]string
 	scopedPublishings      map[string][]string
 	allowedTopics          map[string][]string
-	daprHTTPAPI            http.API
+	appHTTPAPI             http.API
 	operatorClient         operatorv1pb.OperatorClient
 	topicRoutes            map[string]TopicRoute
 	inputBindingRoutes     map[string]string
@@ -275,11 +275,11 @@ func (a *AppRuntime) Run(opts ...Option) error {
 	}
 
 	d := time.Since(start).Seconds() * 1000
-	log.Infof("dapr initialized. Status: Running. Init Elapsed %vms", d)
+	log.Infof("Bhojpur Application runtime initialized. Status: Running. Init Elapsed %vms", d)
 
-	if a.daprHTTPAPI != nil {
+	if a.appHTTPAPI != nil {
 		// gRPC server start failure is logged as Fatal in initRuntime method. Setting the status only when runtime is initialized.
-		a.daprHTTPAPI.MarkStatusAsReady()
+		a.appHTTPAPI.MarkStatusAsReady()
 	}
 
 	return nil
@@ -420,8 +420,8 @@ func (a *AppRuntime) initRuntime(opts *runtimeOpts) error {
 	}
 	log.Infof("internal gRPC server is running on port %v", a.runtimeConfig.InternalGRPCPort)
 
-	if a.daprHTTPAPI != nil {
-		a.daprHTTPAPI.MarkStatusAsOutboundReady()
+	if a.appHTTPAPI != nil {
+		a.appHTTPAPI.MarkStatusAsOutboundReady()
 	}
 
 	a.blockUntilAppIsReady()
@@ -430,14 +430,14 @@ func (a *AppRuntime) initRuntime(opts *runtimeOpts) error {
 	if err != nil {
 		log.Warnf("failed to open %s channel to app: %s", string(a.runtimeConfig.ApplicationProtocol), err)
 	}
-	a.daprHTTPAPI.SetAppChannel(a.appChannel)
+	a.appHTTPAPI.SetAppChannel(a.appChannel)
 	grpcAPI.SetAppChannel(a.appChannel)
 
 	a.loadAppConfiguration()
 
 	a.initDirectMessaging(a.nameResolver)
 
-	a.daprHTTPAPI.SetDirectMessaging(a.directMessaging)
+	a.appHTTPAPI.SetDirectMessaging(a.directMessaging)
 	grpcAPI.SetDirectMessaging(a.directMessaging)
 
 	err = a.initActors()
@@ -445,7 +445,7 @@ func (a *AppRuntime) initRuntime(opts *runtimeOpts) error {
 		log.Warnf("failed to init actors: %s", err)
 	}
 
-	a.daprHTTPAPI.SetActorRuntime(a.actor)
+	a.appHTTPAPI.SetActorRuntime(a.actor)
 	grpcAPI.SetActorRuntime(a.actor)
 
 	// TODO: Remove feature flag once feature is ratified
@@ -873,14 +873,14 @@ func (a *AppRuntime) sendBindingEventToApp(bindingName string, data []byte, meta
 		if span != nil {
 			m := diag.ConstructInputBindingSpanAttributes(
 				bindingName,
-				"/dapr.proto.runtime.v1.AppCallback/OnBindingEvent")
+				"/v1.runtime.AppCallback/OnBindingEvent")
 			diag.AddAttributesToSpan(span, m)
 			diag.UpdateSpanStatusFromGRPCError(span, err)
 			span.End()
 		}
 		if diag.DefaultGRPCMonitoring.IsEnabled() {
 			diag.DefaultGRPCMonitoring.ServerRequestSent(ctx,
-				"/dapr.proto.runtime.v1.AppCallback/OnBindingEvent",
+				"/v1.runtime.AppCallback/OnBindingEvent",
 				status.Code(err).String(),
 				int64(len(resp.GetData())), start)
 		}
@@ -972,11 +972,11 @@ func (a *AppRuntime) readFromBinding(name string, binding bindings.InputBinding)
 }
 
 func (a *AppRuntime) startHTTPServer(port int, publicPort *int, profilePort int, allowedOrigins string, pipeline http_middleware.Pipeline) error {
-	a.daprHTTPAPI = http.NewAPI(a.runtimeConfig.ID, a.appChannel, a.directMessaging, a.getComponents, a.stateStores, a.secretStores,
+	a.appHTTPAPI = http.NewAPI(a.runtimeConfig.ID, a.appChannel, a.directMessaging, a.getComponents, a.stateStores, a.secretStores,
 		a.secretsConfiguration, a.getPublishAdapter(), a.actor, a.sendToOutputBinding, a.globalConfig.Spec.TracingSpec, a.ShutdownWithWait)
 	serverConf := http.NewServerConfig(a.runtimeConfig.ID, a.hostAddress, port, a.runtimeConfig.APIListenAddresses, publicPort, profilePort, allowedOrigins, a.runtimeConfig.EnableProfiling, a.runtimeConfig.MaxRequestBodySize, a.runtimeConfig.UnixDomainSocket, a.runtimeConfig.ReadBufferSize, a.runtimeConfig.StreamRequestBody)
 
-	server := http.NewServer(a.daprHTTPAPI, serverConf, a.globalConfig.Spec.TracingSpec, a.globalConfig.Spec.MetricSpec, pipeline, a.globalConfig.Spec.APISpec)
+	server := http.NewServer(a.appHTTPAPI, serverConf, a.globalConfig.Spec.TracingSpec, a.globalConfig.Spec.MetricSpec, pipeline, a.globalConfig.Spec.APISpec)
 	if err := server.StartNonBlocking(); err != nil {
 		return err
 	}
@@ -1762,7 +1762,7 @@ func (a *AppRuntime) processComponents() {
 		if err != nil {
 			e := fmt.Sprintf("process component %s error: %s", comp.Name, err.Error())
 			if !comp.Spec.IgnoreErrors {
-				log.Warnf("process component error daprd process will exited, gracefully to stop")
+				log.Warnf("process component error Bhojpur Application process will exited, gracefully to stop")
 				a.Shutdown(a.runtimeConfig.GracefulShutdownDuration)
 				log.Fatalf(e)
 			}
@@ -1933,7 +1933,7 @@ func (a *AppRuntime) ShutdownWithWait() {
 func (a *AppRuntime) cleanSocket() {
 	if a.runtimeConfig.UnixDomainSocket != "" {
 		for _, s := range []string{"http", "grpc"} {
-			os.Remove(fmt.Sprintf("%s/dapr-%s-%s.socket", a.runtimeConfig.UnixDomainSocket, a.runtimeConfig.ID, s))
+			os.Remove(fmt.Sprintf("%s/app-%s-%s.socket", a.runtimeConfig.UnixDomainSocket, a.runtimeConfig.ID, s))
 		}
 	}
 }
@@ -1943,11 +1943,11 @@ func (a *AppRuntime) Shutdown(duration time.Duration) {
 	defer a.cleanSocket()
 
 	a.stopActor()
-	log.Infof("dapr shutting down.")
-	log.Info("Stopping Dapr APIs")
+	log.Infof("Bhojpur Application runtime shutting down.")
+	log.Info("Stopping Bhojpur Application APIs")
 	for _, closer := range a.apiClosers {
 		if err := closer.Close(); err != nil {
-			log.Warnf("error closing API: %v", err)
+			log.Warnf("error closing Bhojpur Application API: %v", err)
 		}
 	}
 	log.Infof("Waiting %s to finish outstanding operations", duration)

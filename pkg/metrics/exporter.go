@@ -107,13 +107,13 @@ func (m *promMetricsExporter) startMetricServer() error {
 		return errors.New("exporter was not initialized")
 	}
 
-	m.exporter.logger.Infof("metrics server started on %s%s", addr, defaultMetricsPath)
+	m.exporter.logger.Infof("Bhojpur Application Metrics server started on %s%s", addr, defaultMetricsPath)
 	go func() {
 		mux := http.NewServeMux()
 		mux.Handle(defaultMetricsPath, m.ocExporter)
 
 		if err := http.ListenAndServe(addr, mux); err != nil {
-			m.exporter.logger.Fatalf("failed to start metrics server: %v", err)
+			m.exporter.logger.Fatalf("failed to start Bhojpur Application Metrics server: %v", err)
 		}
 	}()
 

@@ -33,7 +33,7 @@ var stopAppID string
 
 var StopCmd = &cobra.Command{
 	Use:   "stop",
-	Short: "Stop Bhojpur Application instances and their associated apps. Supported platforms: Self-hosted",
+	Short: "Stop runtime instances and their associated apps. Supported platforms: Self-hosted",
 	Example: `
 # Stop the Bhojpur Application
 appctl stop --app-id <ID>

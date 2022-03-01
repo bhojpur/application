@@ -41,7 +41,7 @@ var (
 // UninstallCmd is a command from removing a Bhojpur Application installation.
 var UninstallCmd = &cobra.Command{
 	Use:   "uninstall",
-	Short: "Uninstall Bhojpur Application runtime. Supported platforms: Kubernetes and self-hosted",
+	Short: "Uninstall runtime. Supported platforms: Kubernetes and self-hosted",
 	Example: `
 # Uninstall from self-hosted mode
 appctl uninstall
@@ -71,7 +71,7 @@ appctl uninstall -k
 		if err != nil {
 			utils.FailureStatusEvent(os.Stderr, fmt.Sprintf("Error removing Bhojpur Application: %s", err))
 		} else {
-			utils.SuccessStatusEvent(os.Stdout, "Bhojpu Rapplication has been removed successfully")
+			utils.SuccessStatusEvent(os.Stdout, "Bhojpur Application has been removed successfully")
 		}
 	},
 }

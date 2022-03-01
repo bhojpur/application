@@ -180,7 +180,7 @@ func (s *Server) StartRaft(config *raft.Config) error {
 		s.config = config
 	}
 
-	// Use LoggerAdapter to integrate with Dapr logger. Log level relies on placement log level.
+	// Use LoggerAdapter to integrate with Bhojpur Application logger. Log level relies on placement log level.
 	s.config.Logger = loggerAdapter
 	s.config.LocalID = raft.ServerID(s.id)
 

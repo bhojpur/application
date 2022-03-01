@@ -38,7 +38,7 @@ var (
 
 var LogsCmd = &cobra.Command{
 	Use:   "logs",
-	Short: "Get the Bhojpur Application runtime sidecar logs for an application. Supported platforms: Kubernetes",
+	Short: "Get the runtime sidecar logs for an application. Supported platforms: Kubernetes",
 	Example: `
 # Get logs of a sample application from target Pod in custom namespace
 appctl logs -k --app-id sample --pod-name target --namespace custom

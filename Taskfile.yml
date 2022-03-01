@@ -9,11 +9,25 @@ tasks:
         - echo "{{.GREETING}}"
         silent: true
 
+
+    build-tools:
+        desc: Build the software tools for build, release of Bhojpur GUI applications
+        cmds:
+        - CGO_ENABLED=0 GOOS=darwin GOARCH=amd64 GOFLAGS=-mod=mod go build -o bin/appctl client.go 
+        - CGO_ENABLED=0 GOOS=darwin GOARCH=amd64 GOFLAGS=-mod=mod go build -o bin/appsvr cmd/appsvr/main.go 
+        - CGO_ENABLED=0 GOOS=darwin GOARCH=amd64 GOFLAGS=-mod=mod go build -o bin/injector cmd/injector/main.go 
+        - CGO_ENABLED=0 GOOS=darwin GOARCH=amd64 GOFLAGS=-mod=mod go build -o bin/operator cmd/operator/main.go 
+        - CGO_ENABLED=0 GOOS=darwin GOARCH=amd64 GOFLAGS=-mod=mod go build -o bin/placement cmd/placement/main.go 
+        - CGO_ENABLED=0 GOOS=darwin GOARCH=amd64 GOFLAGS=-mod=mod go build -o bin/sentry cmd/sentry/main.go
+        - chmod 755 ./bin/appctl ./bin/appsvr ./bin/injector ./bin/operator ./bin/placement ./bin/sentry
+        - cp ./bin/appctl $GOPATH/bin
+        - cp ./bin/appsvr $GOPATH/bin
+
     build-web:
         desc: Build the web application
         cmds:
-        - GOFLAGS=-mod=mod go build -o bin/appctl client.go 
-        - GOFLAGS=-mod=mod go build -o bin/appsvr server.go 
+        - CGO_ENABLED=0 GOOS=darwin GOARCH=amd64 GOFLAGS=-mod=mod go build -o bin/appctl client.go
+        # - CGO_ENABLED=0 GOOS=darwin GOARCH=amd64 GOFLAGS=-mod=mod go build -o bin/appsvr server.go 
         - GOFLAGS=-mod=mod go generate ./pkg/webui/...
 
     build-darwin:

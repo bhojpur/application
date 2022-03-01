@@ -30,6 +30,7 @@ import (
 
 	"github.com/bhojpur/service/pkg/utils/logger"
 
+	utils "github.com/bhojpur/application/cmd/placement/utils"
 	"github.com/bhojpur/application/pkg/credentials"
 	"github.com/bhojpur/application/pkg/fswatcher"
 	"github.com/bhojpur/application/pkg/health"
@@ -47,16 +48,16 @@ const gracefulTimeout = 10 * time.Second
 func main() {
 	log.Infof("starting Bhojpur Application Placement Service -- version %s -- commit %s", version.Version(), version.Commit())
 
-	cfg := newConfig()
+	cfg := utils.NewConfig()
 
 	// Apply options to all loggers.
-	if err := logger.ApplyOptionsToLoggers(&cfg.loggerOptions); err != nil {
+	if err := logger.ApplyOptionsToLoggers(&cfg.LoggerOptions); err != nil {
 		log.Fatal(err)
 	}
-	log.Infof("log level set to: %s", cfg.loggerOptions.OutputLevel)
+	log.Infof("log level set to: %s", cfg.LoggerOptions.OutputLevel)
 
 	// Initialize Bhojpur Application runtime metrics for placement.
-	if err := cfg.metricsExporter.Init(); err != nil {
+	if err := cfg.MetricsExporter.Init(); err != nil {
 		log.Fatal(err)
 	}
 
@@ -65,7 +66,7 @@ func main() {
 	}
 
 	// Start Raft cluster.
-	raftServer := raft.New(cfg.raftID, cfg.raftInMemEnabled, cfg.raftPeers, cfg.raftLogStorePath)
+	raftServer := raft.New(cfg.RaftID, cfg.RaftInMemEnabled, cfg.RaftPeers, cfg.RaftLogStorePath)
 	if raftServer == nil {
 		log.Fatal("failed to create raft server.")
 	}
@@ -75,19 +76,19 @@ func main() {
 	}
 
 	// Start Placement gRPC server.
-	hashing.SetReplicationFactor(cfg.replicationFactor)
+	hashing.SetReplicationFactor(cfg.ReplicationFactor)
 	apiServer := placement.NewPlacementService(raftServer)
 	var certChain *credentials.CertChain
-	if cfg.tlsEnabled {
-		certChain = loadCertChains(cfg.certChainPath)
+	if cfg.TlsEnabled {
+		certChain = loadCertChains(cfg.CertChainPath)
 	}
 
 	go apiServer.MonitorLeadership()
-	go apiServer.Run(strconv.Itoa(cfg.placementPort), certChain)
-	log.Infof("placement service started on port %d", cfg.placementPort)
+	go apiServer.Run(strconv.Itoa(cfg.PlacementPort), certChain)
+	log.Infof("Bhojpur Application Placement server started on port %d", cfg.PlacementPort)
 
 	// Start Healthz endpoint.
-	go startHealthzServer(cfg.healthzPort)
+	go startHealthzServer(cfg.HealthzPort)
 
 	// Relay incoming process signal to exit placement gracefully
 	signalCh := make(chan os.Signal, 10)

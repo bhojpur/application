@@ -36,7 +36,7 @@ var (
 
 var ComponentsCmd = &cobra.Command{
 	Use:   "components",
-	Short: "List all Bhojpur Application components. Supported platforms: Kubernetes",
+	Short: "List all runtime components. Supported platforms: Kubernetes",
 	Run: func(cmd *cobra.Command, args []string) {
 		if kubernetesMode {
 			err := kubernetes.PrintComponents(componentsName, componentsOutputFormat)

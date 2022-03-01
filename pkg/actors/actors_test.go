@@ -104,9 +104,9 @@ func (r *reentrantAppChannel) InvokeMethod(ctx context.Context, req *invokev1.In
 		nextReq := r.nextCall[0]
 		r.nextCall = r.nextCall[1:]
 
-		if val, ok := req.Metadata()["Dapr-Reentrancy-Id"]; ok {
+		if val, ok := req.Metadata()["App-Reentrancy-Id"]; ok {
 			header := fasthttp.RequestHeader{}
-			header.Add("Dapr-Reentrancy-Id", val.Values[0])
+			header.Add("App-Reentrancy-Id", val.Values[0])
 			nextReq.AddHeaders(&header)
 		}
 		_, err := r.a.callLocalActor(context.Background(), nextReq)

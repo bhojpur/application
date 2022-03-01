@@ -46,7 +46,7 @@ var (
 
 var InvokeCmd = &cobra.Command{
 	Use:   "invoke",
-	Short: "Invoke a method on a given Bhojpur Application. Supported platforms: Self-hosted",
+	Short: "Invoke a method on a given runtime. Supported platforms: Self-hosted",
 	Example: `
 # Invoke a sample method on target application with POST Verb
 appctl invoke --app-id target --method sample --data '{"key":"value"}

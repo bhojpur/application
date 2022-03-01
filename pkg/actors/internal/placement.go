@@ -83,7 +83,7 @@ type ActorPlacement struct {
 	streamConnectedCond *sync.Cond
 
 	// placementTables is the consistent hashing table map to
-	// look up Dapr runtime host address to locate actor.
+	// look up Bhojpur Application runtime host address to locate actor.
 	placementTables *hashing.ConsistentHashTables
 	// placementTableLock is the lock for placementTables.
 	placementTableLock *sync.RWMutex
@@ -271,7 +271,7 @@ func (p *ActorPlacement) Start() {
 				defer p.clientLock.RUnlock()
 
 				// p.clientStream is nil when the app is unhealthy and
-				// daprd is disconnected from the placement service.
+				// Bhojpur Application is disconnected from the placement service.
 				if p.clientStream != nil {
 					err = p.clientStream.Send(&host)
 				}
@@ -354,8 +354,8 @@ func (p *ActorPlacement) establishStreamConn() (v1pb.Placement_ReportAppStatusCl
 		}
 
 		if len(p.serverAddr) == 1 && strings.HasPrefix(p.serverAddr[0], "dns:///") {
-			// In Kubernetes environment, dapr-placement headless service resolves multiple IP addresses.
-			// With round robin load balancer, Dapr can find the leader automatically.
+			// In Kubernetes environment, app-placement headless service resolves multiple IP addresses.
+			// With round robin load balancer, Bhojpur Application can find the leader automatically.
 			opts = append(opts, grpc.WithDefaultServiceConfig(grpcServiceConfig))
 		}
 

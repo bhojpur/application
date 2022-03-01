@@ -152,7 +152,7 @@ build: $(CLI_BINARY) $(APP_BINS)
 
 $(CLI_BINARY):
 	CGO_ENABLED=$(CGO) GOOS=$(GOOS) GOARCH=$(GOARCH) go build $(GCFLAGS) -ldflags $(LDFLAGS) \
-	-o $(BINS_OUT_DIR)/$(CLI_BINARY)$(BINARY_EXT);
+	-o $(BINS_OUT_DIR)$(CLI_BINARY)$(BINARY_EXT) client.go;
 
 # Generate builds for Bhojpur Application runtime binaries for the target
 # Params:
@@ -165,7 +165,7 @@ define genBinariesForTarget
 .PHONY: $(5)/$(1)
 $(5)/$(1):
 	CGO_ENABLED=$(CGO) GOOS=$(3) GOARCH=$(4) go build $(GCFLAGS) -ldflags=$(LDFLAGS) \
-	-o $(5)/$(1) $(2)/;
+	-o $(5)/$(1) $(2)/main.go;
 endef
 
 # Generate binary targets

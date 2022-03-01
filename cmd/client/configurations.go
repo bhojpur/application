@@ -36,7 +36,7 @@ var (
 
 var ConfigurationsCmd = &cobra.Command{
 	Use:   "configurations",
-	Short: "List all Bhojpur Application configurations. Supported platforms: Kubernetes",
+	Short: "List all runtime configurations. Supported platforms: Kubernetes",
 	Run: func(cmd *cobra.Command, args []string) {
 		if kubernetesMode {
 			err := kubernetes.PrintConfigurations(configurationName, configurationOutputFormat)

@@ -47,7 +47,7 @@ var (
 
 var InitCmd = &cobra.Command{
 	Use:   "init",
-	Short: "Install the Bhojpur Application runtime on supported hosting platforms. Supported platforms: Kubernetes and Self-hosted",
+	Short: "Install the runtime on supported hosting platforms. Supported platforms: Kubernetes and Self-hosted",
 	PreRun: func(cmd *cobra.Command, args []string) {
 		viper.BindPFlag("network", cmd.Flags().Lookup("network"))
 		viper.BindPFlag("image-repository", cmd.Flags().Lookup("image-repository"))

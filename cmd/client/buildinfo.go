@@ -30,7 +30,7 @@ import (
 
 var BuildInfoCmd = &cobra.Command{
 	Use:   "build-info",
-	Short: "Print build info of Bhojpur Application CLI and runtime",
+	Short: "Print build info of CLI and runtime",
 	Example: `
 # Print build info
 appctl build-info

@@ -32,7 +32,7 @@ import (
 
 var StatusCmd = &cobra.Command{
 	Use:   "status",
-	Short: "Show the health status of Bhojpur Application services. Supported platforms: Kubernetes",
+	Short: "Show the health status of runtime services. Supported platforms: Kubernetes",
 	Example: `
 # Get status of Bhojpur Application services from Kubernetes
 appctl status -k 

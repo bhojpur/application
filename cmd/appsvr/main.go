@@ -79,8 +79,9 @@ import (
 	pubsub_loader "github.com/bhojpur/application/pkg/components/pubsub"
 	pubs "github.com/bhojpur/service/pkg/pubsub"
 	pubsub_snssqs "github.com/bhojpur/service/pkg/pubsub/aws/snssqs"
-	pubsub_eventhubs "github.com/bhojpur/service/pkg/pubsub/azure/eventhubs"
-	"github.com/bhojpur/service/pkg/pubsub/azure/servicebus"
+
+	// pubsub_eventhubs "github.com/bhojpur/service/pkg/pubsub/azure/eventhubs"
+	// "github.com/bhojpur/service/pkg/pubsub/azure/servicebus"
 	pubsub_gcp "github.com/bhojpur/service/pkg/pubsub/gcp/pubsub"
 	pubsub_hazelcast "github.com/bhojpur/service/pkg/pubsub/hazelcast"
 	pubsub_inmemory "github.com/bhojpur/service/pkg/pubsub/in-memory"
@@ -116,8 +117,9 @@ import (
 	bindings_cosmosdb "github.com/bhojpur/service/pkg/bindings/azure/cosmosdb"
 	bindings_cosmosdbgremlinapi "github.com/bhojpur/service/pkg/bindings/azure/cosmosdbgremlinapi"
 	"github.com/bhojpur/service/pkg/bindings/azure/eventgrid"
-	"github.com/bhojpur/service/pkg/bindings/azure/eventhubs"
-	"github.com/bhojpur/service/pkg/bindings/azure/servicebusqueues"
+
+	// "github.com/bhojpur/service/pkg/bindings/azure/eventhubs"
+	// "github.com/bhojpur/service/pkg/bindings/azure/servicebusqueues"
 	"github.com/bhojpur/service/pkg/bindings/azure/signalr"
 	"github.com/bhojpur/service/pkg/bindings/azure/storagequeues"
 	"github.com/bhojpur/service/pkg/bindings/cron"
@@ -164,7 +166,7 @@ import (
 
 var (
 	log        = logger.NewLogger("app.runtime")
-	logContrib = logger.NewLogger("app.contrib")
+	logService = logger.NewLogger("app.service")
 )
 
 func main() {
@@ -179,314 +181,320 @@ func main() {
 	err = rt.Run(
 		runtime.WithSecretStores(
 			secretstores_loader.New("kubernetes", func() secretstores.SecretStore {
-				return secretstore_kubernetes.NewKubernetesSecretStore(logContrib)
+				return secretstore_kubernetes.NewKubernetesSecretStore(logService)
 			}),
 			secretstores_loader.New("azure.keyvault", func() secretstores.SecretStore {
-				return keyvault.NewAzureKeyvaultSecretStore(logContrib)
+				return keyvault.NewAzureKeyvaultSecretStore(logService)
 			}),
 			secretstores_loader.New("hashicorp.vault", func() secretstores.SecretStore {
-				return vault.NewHashiCorpVaultSecretStore(logContrib)
+				return vault.NewHashiCorpVaultSecretStore(logService)
 			}),
 			secretstores_loader.New("aws.secretmanager", func() secretstores.SecretStore {
-				return secretmanager.NewSecretManager(logContrib)
+				return secretmanager.NewSecretManager(logService)
 			}),
 			secretstores_loader.New("aws.parameterstore", func() secretstores.SecretStore {
-				return parameterstore.NewParameterStore(logContrib)
+				return parameterstore.NewParameterStore(logService)
 			}),
 			secretstores_loader.New("gcp.secretmanager", func() secretstores.SecretStore {
-				return gcp_secretmanager.NewSecreteManager(logContrib)
+				return gcp_secretmanager.NewSecreteManager(logService)
 			}),
 			secretstores_loader.New("local.file", func() secretstores.SecretStore {
-				return secretstore_file.NewLocalSecretStore(logContrib)
+				return secretstore_file.NewLocalSecretStore(logService)
 			}),
 			secretstores_loader.New("local.env", func() secretstores.SecretStore {
-				return secretstore_env.NewEnvSecretStore(logContrib)
+				return secretstore_env.NewEnvSecretStore(logService)
 			}),
 			secretstores_loader.New("alicloud.parameterstore", func() secretstores.SecretStore {
-				return alicloud_paramstore.NewParameterStore(logContrib)
+				return alicloud_paramstore.NewParameterStore(logService)
 			}),
 		),
 		runtime.WithStates(
 			state_loader.New("redis", func() state.Store {
-				return state_redis.NewRedisStateStore(logContrib)
+				return state_redis.NewRedisStateStore(logService)
 			}),
 			state_loader.New("consul", func() state.Store {
-				return consul.NewConsulStateStore(logContrib)
+				return consul.NewConsulStateStore(logService)
 			}),
 			state_loader.New("azure.blobstorage", func() state.Store {
-				return state_azure_blobstorage.NewAzureBlobStorageStore(logContrib)
+				return state_azure_blobstorage.NewAzureBlobStorageStore(logService)
 			}),
 			state_loader.New("azure.cosmosdb", func() state.Store {
-				return state_cosmosdb.NewCosmosDBStateStore(logContrib)
+				return state_cosmosdb.NewCosmosDBStateStore(logService)
 			}),
 			state_loader.New("azure.tablestorage", func() state.Store {
-				return state_azure_tablestorage.NewAzureTablesStateStore(logContrib)
+				return state_azure_tablestorage.NewAzureTablesStateStore(logService)
 			}),
 			state_loader.New("cassandra", func() state.Store {
-				return cassandra.NewCassandraStateStore(logContrib)
+				return cassandra.NewCassandraStateStore(logService)
 			}),
 			state_loader.New("memcached", func() state.Store {
-				return memcached.NewMemCacheStateStore(logContrib)
+				return memcached.NewMemCacheStateStore(logService)
 			}),
 			state_loader.New("mongodb", func() state.Store {
-				return mongodb.NewMongoDB(logContrib)
+				return mongodb.NewMongoDB(logService)
 			}),
 			state_loader.New("zookeeper", func() state.Store {
-				return zookeeper.NewZookeeperStateStore(logContrib)
+				return zookeeper.NewZookeeperStateStore(logService)
 			}),
 			state_loader.New("gcp.firestore", func() state.Store {
-				return firestore.NewFirestoreStateStore(logContrib)
+				return firestore.NewFirestoreStateStore(logService)
 			}),
 			state_loader.New("postgresql", func() state.Store {
-				return postgresql.NewPostgreSQLStateStore(logContrib)
+				return postgresql.NewPostgreSQLStateStore(logService)
 			}),
 			state_loader.New("sqlserver", func() state.Store {
-				return sqlserver.NewSQLServerStateStore(logContrib)
+				return sqlserver.NewSQLServerStateStore(logService)
 			}),
 			state_loader.New("hazelcast", func() state.Store {
-				return hazelcast.NewHazelcastStore(logContrib)
+				return hazelcast.NewHazelcastStore(logService)
 			}),
 			state_loader.New("couchbase", func() state.Store {
-				return couchbase.NewCouchbaseStateStore(logContrib)
+				return couchbase.NewCouchbaseStateStore(logService)
 			}),
 			state_loader.New("aerospike", func() state.Store {
-				return aerospike.NewAerospikeStateStore(logContrib)
+				return aerospike.NewAerospikeStateStore(logService)
 			}),
 			state_loader.New("rethinkdb", func() state.Store {
-				return rethinkdb.NewRethinkDBStateStore(logContrib)
+				return rethinkdb.NewRethinkDBStateStore(logService)
 			}),
 			state_loader.New("aws.dynamodb", state_dynamodb.NewDynamoDBStateStore),
 			state_loader.New("mysql", func() state.Store {
-				return state_mysql.NewMySQLStateStore(logContrib)
+				return state_mysql.NewMySQLStateStore(logService)
 			}),
 			state_loader.New("oci.objectstorage", func() state.Store {
-				return state_oci_objectstorage.NewOCIObjectStorageStore(logContrib)
+				return state_oci_objectstorage.NewOCIObjectStorageStore(logService)
 			}),
 			state_loader.New("jetstream", func() state.Store {
-				return state_jetstream.NewJetstreamStateStore(logContrib)
+				return state_jetstream.NewJetstreamStateStore(logService)
 			}),
 			state_loader.New("oracledatabase", func() state.Store {
-				return state_oracledatabase.NewOracleDatabaseStateStore(logContrib)
+				return state_oracledatabase.NewOracleDatabaseStateStore(logService)
 			}),
 		),
 		runtime.WithConfigurations(
 			configuration_loader.New("redis", func() configuration.Store {
-				return configuration_redis.NewRedisConfigurationStore(logContrib)
+				return configuration_redis.NewRedisConfigurationStore(logService)
 			}),
 		),
 		runtime.WithPubSubs(
-			pubsub_loader.New("azure.eventhubs", func() pubs.PubSub {
-				return pubsub_eventhubs.NewAzureEventHubs(logContrib)
-			}),
-			pubsub_loader.New("azure.servicebus", func() pubs.PubSub {
-				return servicebus.NewAzureServiceBus(logContrib)
-			}),
+			/*
+				pubsub_loader.New("azure.eventhubs", func() pubs.PubSub {
+					return pubsub_eventhubs.NewAzureEventHubs(logService)
+				}),
+
+					pubsub_loader.New("azure.servicebus", func() pubs.PubSub {
+						return servicebus.NewAzureServiceBus(logService)
+					}),*/
 			pubsub_loader.New("gcp.pubsub", func() pubs.PubSub {
-				return pubsub_gcp.NewGCPPubSub(logContrib)
+				return pubsub_gcp.NewGCPPubSub(logService)
 			}),
 			pubsub_loader.New("hazelcast", func() pubs.PubSub {
-				return pubsub_hazelcast.NewHazelcastPubSub(logContrib)
+				return pubsub_hazelcast.NewHazelcastPubSub(logService)
 			}),
 			pubsub_loader.New("jetstream", func() pubs.PubSub {
-				return pubsub_jetstream.NewJetStream(logContrib)
+				return pubsub_jetstream.NewJetStream(logService)
 			}),
 			pubsub_loader.New("kafka", func() pubs.PubSub {
-				return pubsub_kafka.NewKafka(logContrib)
+				return pubsub_kafka.NewKafka(logService)
 			}),
 			pubsub_loader.New("mqtt", func() pubs.PubSub {
-				return pubsub_mqtt.NewMQTTPubSub(logContrib)
+				return pubsub_mqtt.NewMQTTPubSub(logService)
 			}),
 			pubsub_loader.New("natsstreaming", func() pubs.PubSub {
-				return natsstreaming.NewNATSStreamingPubSub(logContrib)
+				return natsstreaming.NewNATSStreamingPubSub(logService)
 			}),
 			pubsub_loader.New("pulsar", func() pubs.PubSub {
-				return pubsub_pulsar.NewPulsar(logContrib)
+				return pubsub_pulsar.NewPulsar(logService)
 			}),
 			pubsub_loader.New("rabbitmq", func() pubs.PubSub {
-				return rabbitmq.NewRabbitMQ(logContrib)
+				return rabbitmq.NewRabbitMQ(logService)
 			}),
 			pubsub_loader.New("redis", func() pubs.PubSub {
-				return pubsub_redis.NewRedisStreams(logContrib)
+				return pubsub_redis.NewRedisStreams(logService)
 			}),
 			pubsub_loader.New("snssqs", func() pubs.PubSub {
-				return pubsub_snssqs.NewSnsSqs(logContrib)
+				return pubsub_snssqs.NewSnsSqs(logService)
 			}),
 			pubsub_loader.New("in-memory", func() pubs.PubSub {
-				return pubsub_inmemory.New(logContrib)
+				return pubsub_inmemory.New(logService)
 			}),
 		),
 		runtime.WithNameResolutions(
 			nr_loader.New("mdns", func() nr.Resolver {
-				return nr_mdns.NewResolver(logContrib)
+				return nr_mdns.NewResolver(logService)
 			}),
 			nr_loader.New("kubernetes", func() nr.Resolver {
-				return nr_kubernetes.NewResolver(logContrib)
+				return nr_kubernetes.NewResolver(logService)
 			}),
 			nr_loader.New("consul", func() nr.Resolver {
-				return nr_consul.NewResolver(logContrib)
+				return nr_consul.NewResolver(logService)
 			}),
 		),
 		runtime.WithInputBindings(
 			bindings_loader.NewInput("aws.sqs", func() bindings.InputBinding {
-				return sqs.NewAWSSQS(logContrib)
+				return sqs.NewAWSSQS(logService)
 			}),
 			bindings_loader.NewInput("aws.kinesis", func() bindings.InputBinding {
-				return kinesis.NewAWSKinesis(logContrib)
+				return kinesis.NewAWSKinesis(logService)
 			}),
 			bindings_loader.NewInput("azure.eventgrid", func() bindings.InputBinding {
-				return eventgrid.NewAzureEventGrid(logContrib)
+				return eventgrid.NewAzureEventGrid(logService)
 			}),
-			bindings_loader.NewInput("azure.eventhubs", func() bindings.InputBinding {
-				return eventhubs.NewAzureEventHubs(logContrib)
-			}),
-			bindings_loader.NewInput("azure.servicebusqueues", func() bindings.InputBinding {
-				return servicebusqueues.NewAzureServiceBusQueues(logContrib)
-			}),
+			/*
+				bindings_loader.NewInput("azure.eventhubs", func() bindings.InputBinding {
+					return eventhubs.NewAzureEventHubs(logService)
+				}),
+
+					bindings_loader.NewInput("azure.servicebusqueues", func() bindings.InputBinding {
+						return servicebusqueues.NewAzureServiceBusQueues(logService)
+					}), */
 			bindings_loader.NewInput("azure.storagequeues", func() bindings.InputBinding {
-				return storagequeues.NewAzureStorageQueues(logContrib)
+				return storagequeues.NewAzureStorageQueues(logService)
 			}),
 			bindings_loader.NewInput("cron", func() bindings.InputBinding {
-				return cron.NewCron(logContrib)
+				return cron.NewCron(logService)
 			}),
 			bindings_loader.NewInput("dingtalk.webhook", func() bindings.InputBinding {
-				return dingtalk_webhook.NewDingTalkWebhook(logContrib)
+				return dingtalk_webhook.NewDingTalkWebhook(logService)
 			}),
 			bindings_loader.NewInput("gcp.pubsub", func() bindings.InputBinding {
-				return pubsub.NewGCPPubSub(logContrib)
+				return pubsub.NewGCPPubSub(logService)
 			}),
 			bindings_loader.NewInput("kafka", func() bindings.InputBinding {
-				return kafka.NewKafka(logContrib)
+				return kafka.NewKafka(logService)
 			}),
 			bindings_loader.NewInput("kubernetes", func() bindings.InputBinding {
-				return kubernetes.NewKubernetes(logContrib)
+				return kubernetes.NewKubernetes(logService)
 			}),
 			bindings_loader.NewInput("mqtt", func() bindings.InputBinding {
-				return mqtt.NewMQTT(logContrib)
+				return mqtt.NewMQTT(logService)
 			}),
 			bindings_loader.NewInput("rabbitmq", func() bindings.InputBinding {
-				return bindings_rabbitmq.NewRabbitMQ(logContrib)
+				return bindings_rabbitmq.NewRabbitMQ(logService)
 			}),
 			bindings_loader.NewInput("rethinkdb.statechange", func() bindings.InputBinding {
-				return statechange.NewRethinkDBStateChangeBinding(logContrib)
+				return statechange.NewRethinkDBStateChangeBinding(logService)
 			}),
 			bindings_loader.NewInput("twitter", func() bindings.InputBinding {
-				return twitter.NewTwitter(logContrib)
+				return twitter.NewTwitter(logService)
 			}),
 			bindings_loader.NewInput("zeebe.jobworker", func() bindings.InputBinding {
-				return bindings_zeebe_jobworker.NewZeebeJobWorker(logContrib)
+				return bindings_zeebe_jobworker.NewZeebeJobWorker(logService)
 			}),
 		),
 		runtime.WithOutputBindings(
 			bindings_loader.NewOutput("alicloud.oss", func() bindings.OutputBinding {
-				return oss.NewAliCloudOSS(logContrib)
+				return oss.NewAliCloudOSS(logService)
 			}),
 			bindings_loader.NewOutput("alicloud.tablestore", func() bindings.OutputBinding {
 				return tablestore.NewAliCloudTableStore(log)
 			}),
 			bindings_loader.NewOutput("apns", func() bindings.OutputBinding {
-				return apns.NewAPNS(logContrib)
+				return apns.NewAPNS(logService)
 			}),
 			bindings_loader.NewOutput("aws.s3", func() bindings.OutputBinding {
-				return s3.NewAWSS3(logContrib)
+				return s3.NewAWSS3(logService)
 			}),
 			bindings_loader.NewOutput("aws.ses", func() bindings.OutputBinding {
-				return ses.NewAWSSES(logContrib)
+				return ses.NewAWSSES(logService)
 			}),
 			bindings_loader.NewOutput("aws.sqs", func() bindings.OutputBinding {
-				return sqs.NewAWSSQS(logContrib)
+				return sqs.NewAWSSQS(logService)
 			}),
 			bindings_loader.NewOutput("aws.sns", func() bindings.OutputBinding {
-				return sns.NewAWSSNS(logContrib)
+				return sns.NewAWSSNS(logService)
 			}),
 			bindings_loader.NewOutput("aws.kinesis", func() bindings.OutputBinding {
-				return kinesis.NewAWSKinesis(logContrib)
+				return kinesis.NewAWSKinesis(logService)
 			}),
 			bindings_loader.NewOutput("aws.dynamodb", func() bindings.OutputBinding {
-				return dynamodb.NewDynamoDB(logContrib)
+				return dynamodb.NewDynamoDB(logService)
 			}),
 			bindings_loader.NewOutput("azure.blobstorage", func() bindings.OutputBinding {
-				return blobstorage.NewAzureBlobStorage(logContrib)
+				return blobstorage.NewAzureBlobStorage(logService)
 			}),
 			bindings_loader.NewOutput("azure.cosmosdb", func() bindings.OutputBinding {
-				return bindings_cosmosdb.NewCosmosDB(logContrib)
+				return bindings_cosmosdb.NewCosmosDB(logService)
 			}),
 			bindings_loader.NewOutput("azure.cosmosdb.gremlinapi", func() bindings.OutputBinding {
-				return bindings_cosmosdbgremlinapi.NewCosmosDBGremlinAPI(logContrib)
+				return bindings_cosmosdbgremlinapi.NewCosmosDBGremlinAPI(logService)
 			}),
 			bindings_loader.NewOutput("azure.eventgrid", func() bindings.OutputBinding {
-				return eventgrid.NewAzureEventGrid(logContrib)
+				return eventgrid.NewAzureEventGrid(logService)
 			}),
-			bindings_loader.NewOutput("azure.eventhubs", func() bindings.OutputBinding {
-				return eventhubs.NewAzureEventHubs(logContrib)
-			}),
-			bindings_loader.NewOutput("azure.servicebusqueues", func() bindings.OutputBinding {
-				return servicebusqueues.NewAzureServiceBusQueues(logContrib)
-			}),
+			/*
+				bindings_loader.NewOutput("azure.eventhubs", func() bindings.OutputBinding {
+					return eventhubs.NewAzureEventHubs(logService)
+				}),
+
+					bindings_loader.NewOutput("azure.servicebusqueues", func() bindings.OutputBinding {
+						return servicebusqueues.NewAzureServiceBusQueues(logService)
+					}), */
 			bindings_loader.NewOutput("azure.signalr", func() bindings.OutputBinding {
-				return signalr.NewSignalR(logContrib)
+				return signalr.NewSignalR(logService)
 			}),
 			bindings_loader.NewOutput("azure.storagequeues", func() bindings.OutputBinding {
-				return storagequeues.NewAzureStorageQueues(logContrib)
+				return storagequeues.NewAzureStorageQueues(logService)
 			}),
 			bindings_loader.NewOutput("cron", func() bindings.OutputBinding {
-				return cron.NewCron(logContrib)
+				return cron.NewCron(logService)
 			}),
 			bindings_loader.NewOutput("dingtalk.webhook", func() bindings.OutputBinding {
-				return dingtalk_webhook.NewDingTalkWebhook(logContrib)
+				return dingtalk_webhook.NewDingTalkWebhook(logService)
 			}),
 			bindings_loader.NewOutput("gcp.bucket", func() bindings.OutputBinding {
-				return bucket.NewGCPStorage(logContrib)
+				return bucket.NewGCPStorage(logService)
 			}),
 			bindings_loader.NewOutput("gcp.pubsub", func() bindings.OutputBinding {
-				return pubsub.NewGCPPubSub(logContrib)
+				return pubsub.NewGCPPubSub(logService)
 			}),
 			bindings_loader.NewOutput("http", func() bindings.OutputBinding {
-				return http.NewHTTP(logContrib)
+				return http.NewHTTP(logService)
 			}),
 			bindings_loader.NewOutput("influx", func() bindings.OutputBinding {
-				return influx.NewInflux(logContrib)
+				return influx.NewInflux(logService)
 			}),
 			bindings_loader.NewOutput("kafka", func() bindings.OutputBinding {
-				return kafka.NewKafka(logContrib)
+				return kafka.NewKafka(logService)
 			}),
 			bindings_loader.NewOutput("localstorage", func() bindings.OutputBinding {
-				return localstorage.NewLocalStorage(logContrib)
+				return localstorage.NewLocalStorage(logService)
 			}),
 			bindings_loader.NewOutput("mqtt", func() bindings.OutputBinding {
-				return mqtt.NewMQTT(logContrib)
+				return mqtt.NewMQTT(logService)
 			}),
 			bindings_loader.NewOutput("mysql", func() bindings.OutputBinding {
-				return mysql.NewMysql(logContrib)
+				return mysql.NewMysql(logService)
 			}),
 			bindings_loader.NewOutput("postgres", func() bindings.OutputBinding {
-				return postgres.NewPostgres(logContrib)
+				return postgres.NewPostgres(logService)
 			}),
 			bindings_loader.NewOutput("postmark", func() bindings.OutputBinding {
-				return postmark.NewPostmark(logContrib)
+				return postmark.NewPostmark(logService)
 			}),
 			bindings_loader.NewOutput("rabbitmq", func() bindings.OutputBinding {
-				return bindings_rabbitmq.NewRabbitMQ(logContrib)
+				return bindings_rabbitmq.NewRabbitMQ(logService)
 			}),
 			bindings_loader.NewOutput("redis", func() bindings.OutputBinding {
-				return redis.NewRedis(logContrib)
+				return redis.NewRedis(logService)
 			}),
 			bindings_loader.NewOutput("smtp", func() bindings.OutputBinding {
-				return smtp.NewSMTP(logContrib)
+				return smtp.NewSMTP(logService)
 			}),
 			bindings_loader.NewOutput("twilio.sms", func() bindings.OutputBinding {
-				return sms.NewSMS(logContrib)
+				return sms.NewSMS(logService)
 			}),
 			bindings_loader.NewOutput("twilio.sendgrid", func() bindings.OutputBinding {
-				return sendgrid.NewSendGrid(logContrib)
+				return sendgrid.NewSendGrid(logService)
 			}),
 			bindings_loader.NewOutput("twitter", func() bindings.OutputBinding {
-				return twitter.NewTwitter(logContrib)
+				return twitter.NewTwitter(logService)
 			}),
 			bindings_loader.NewOutput("zeebe.command", func() bindings.OutputBinding {
-				return bindings_zeebe_command.NewZeebeCommand(logContrib)
+				return bindings_zeebe_command.NewZeebeCommand(logService)
 			}),
 			bindings_loader.NewOutput("graphql", func() bindings.OutputBinding {
-				return graphql.NewGraphQL(logContrib)
+				return graphql.NewGraphQL(logService)
 			}),
 		),
 		runtime.WithHTTPMiddleware(
@@ -520,7 +528,7 @@ func main() {
 		),
 	)
 	if err != nil {
-		log.Fatalf("fatal error from runtime: %s", err)
+		log.Fatalf("fatal error from Bhojpur Application runtime: %s", err)
 	}
 
 	stop := make(chan os.Signal, 1)

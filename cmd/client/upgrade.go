@@ -33,7 +33,7 @@ var upgradeRuntimeVersion string
 
 var UpgradeCmd = &cobra.Command{
 	Use:   "upgrade",
-	Short: "Upgrades or downgrades a Bhojpur Application runtime control plane installation in a cluster. Supported platforms: Kubernetes",
+	Short: "Upgrades or downgrades a runtime control plane installation in a cluster. Supported platforms: Kubernetes",
 	Example: `
 # Upgrade the Bhojpur Application runtime in Kubernetes
 appctl upgrade -k

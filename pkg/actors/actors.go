@@ -62,7 +62,7 @@ import (
 )
 
 const (
-	daprSeparator        = "||"
+	appSeparator        = "||"
 	metadataPartitionKey = "partitionKey"
 	metadataZeroID       = "00000000-0000-0000-0000-000000000000"
 )
@@ -139,7 +139,7 @@ type actorReminderReference struct {
 }
 
 const (
-	incompatibleStateStore = "state store does not support transactions which actors require to save state - please see https://docs.dapr.io/operations/components/setup-state-store/supported-state-stores/"
+	incompatibleStateStore = "state store does not support transactions which actors require to save state - please see https://docs..io/operations/components/setup-state-store/supported-state-stores/"
 )
 
 // NewActors create a new actors runtime with given config.
@@ -220,9 +220,9 @@ func (a *actorsRuntime) Init() error {
 	log.Infof("actor runtime started. actor idle timeout: %s. actor scan interval: %s",
 		a.config.ActorIdleTimeout.String(), a.config.ActorDeactivationScanInterval.String())
 
-	// Be careful to configure healthz endpoint option. If app healthz returns unhealthy status, Dapr will
-	// disconnect from placement to remove the node from consistent hashing ring.
-	// i.e if app is busy state, the healthz status would be flaky, which leads to frequent
+	// Be careful to configure healthz endpoint option. If app healthz returns unhealthy status,
+	// Bhojppur Application will disconnect from placement to remove the node from consistent hashing
+	// ring. i.e if app is busy state, the healthz status would be flaky, which leads to frequent
 	// actor rebalancing. It will impact the entire service.
 	go a.startAppHealthCheck(
 		health.WithFailureThreshold(4),
@@ -246,11 +246,11 @@ func (a *actorsRuntime) startAppHealthCheck(opts ...health.Option) {
 }
 
 func constructCompositeKey(keys ...string) string {
-	return strings.Join(keys, daprSeparator)
+	return strings.Join(keys, appSeparator)
 }
 
 func decomposeCompositeKey(compositeKey string) []string {
-	return strings.Split(compositeKey, daprSeparator)
+	return strings.Split(compositeKey, appSeparator)
 }
 
 func (a *actorsRuntime) deactivateActor(actorType, actorID string) error {
@@ -386,12 +386,12 @@ func (a *actorsRuntime) callLocalActor(ctx context.Context, req *invokev1.Invoke
 	// Reentrancy to determine how we lock.
 	var reentrancyID *string
 	if a.reentrancyFeatureEnabled && a.config.GetReentrancyForType(act.actorType).Enabled {
-		if headerValue, ok := req.Metadata()["Dapr-Reentrancy-Id"]; ok {
+		if headerValue, ok := req.Metadata()["App-Reentrancy-Id"]; ok {
 			reentrancyID = &headerValue.GetValues()[0]
 		} else {
 			reentrancyHeader := fasthttp.RequestHeader{}
 			uuid := uuid.New().String()
-			reentrancyHeader.Add("Dapr-Reentrancy-Id", uuid)
+			reentrancyHeader.Add("App-Reentrancy-Id", uuid)
 			req.AddHeaders(&reentrancyHeader)
 			reentrancyID = &uuid
 		}

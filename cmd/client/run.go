@@ -60,7 +60,7 @@ const (
 
 var RunCmd = &cobra.Command{
 	Use:   "run",
-	Short: "Run the Bhojpur Application runtime and (optionally) your custom application side by side. Supported platforms: Self-hosted",
+	Short: "Run the runtime and (optionally) your custom application side by side. Supported platforms: Self-hosted",
 	Example: `
 # Run a .NET application
 appctl run --app-id myapp --app-port 5000 -- dotnet run
@@ -142,7 +142,7 @@ appctl run --app-id myapp --app-port 3000 --app-protocol grpc -- go run main.go
 					utils.GetSocket(unixDomainSocket, output.AppID, "grpc"))
 			} else {
 				startInfo = fmt.Sprintf(
-					"Starting Bhojput Application runtime with id %s. HTTP Port: %v. gRPC Port: %v",
+					"Starting Bhojpur Application runtime with id %s. HTTP Port: %v. gRPC Port: %v",
 					output.AppID,
 					output.AppHTTPPort,
 					output.AppGRPCPort)
@@ -227,14 +227,14 @@ appctl run --app-id myapp --app-port 3000 --app-protocol grpc -- go run main.go
 
 			stdErrPipe, pipeErr := output.AppCMD.StderrPipe()
 			if pipeErr != nil {
-				utils.FailureStatusEvent(os.Stderr, fmt.Sprintf("Error creating stderr for App: %s", err.Error()))
+				utils.FailureStatusEvent(os.Stderr, fmt.Sprintf("Error creating stderr for App: %s", pipeErr.Error()))
 				appRunning <- false
 				return
 			}
 
 			stdOutPipe, pipeErr := output.AppCMD.StdoutPipe()
 			if pipeErr != nil {
-				utils.FailureStatusEvent(os.Stderr, fmt.Sprintf("Error creating stdout for App: %s", err.Error()))
+				utils.FailureStatusEvent(os.Stderr, fmt.Sprintf("Error creating stdout for App: %s", pipeErr.Error()))
 				appRunning <- false
 				return
 			}

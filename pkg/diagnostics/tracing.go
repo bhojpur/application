@@ -35,7 +35,12 @@ import (
 	// We currently don't depend on the Otel SDK since it has not GA'ed.
 	// This package, however, only contains the conventions from the Otel Spec,
 	// which we do depend on.
-	semconv "go.opentelemetry.io/otel/semconv"
+	// "go.opentelemetry.io/otel"
+	// "go.opentelemetry.io/otel/attribute"
+	// "go.opentelemetry.io/otel/exporters/stdout/stdouttrace"
+	// "go.opentelemetry.io/otel/sdk/resource"
+	// "go.opentelemetry.io/otel/sdk/trace"
+	semconv "go.opentelemetry.io/otel/semconv/v1.7.0"
 )
 
 const (
@@ -86,7 +91,7 @@ const (
 )
 
 // Effectively const, but isn't a const from upstream.
-var messagingDestinationTopicKind = semconv.MessagingDestinationKindKeyTopic.Value.AsString()
+var messagingDestinationTopicKind = semconv.MessagingDestinationKindTopic.Value.AsString()
 
 // SpanContextToW3CString returns the SpanContext string representation.
 func SpanContextToW3CString(sc trace.SpanContext) string {

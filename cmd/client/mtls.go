@@ -36,7 +36,7 @@ var exportPath string
 
 var MTLSCmd = &cobra.Command{
 	Use:   "mtls",
-	Short: "Check if mTLS is enabled. Supported platforms: Kubernetes",
+	Short: "Checks if mTLS is enabled. Supported platforms: Kubernetes",
 	Example: `
 # Check if mTLS is enabled
 appctl mtls -k

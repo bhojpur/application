@@ -105,7 +105,8 @@ func WithHTTPMiddleware(httpMiddleware ...http.Middleware) Option {
 	}
 }
 
-// WithComponentsCallback sets the components callback for applications that embed Dapr.
+// WithComponentsCallback sets the components callback for applications that embed
+// Bhojpur Application runtime.
 func WithComponentsCallback(componentsCallback ComponentsCallback) Option {
 	return func(o *runtimeOpts) {
 		o.componentsCallback = componentsCallback

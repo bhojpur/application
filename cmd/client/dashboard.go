@@ -62,7 +62,7 @@ var (
 
 var DashboardCmd = &cobra.Command{
 	Use:   "dashboard",
-	Short: "Start the Bhojpur Application dashboard. Supported platforms: Kubernetes and self-hosted",
+	Short: "Start the dashboard. Supported platforms: Kubernetes and self-hosted",
 	Example: `
 # Start dashboard locally
 appctl dashboard
