@@ -50,7 +50,7 @@ var ConfigurationsCmd = &cobra.Command{
 		kubernetes.CheckForCertExpiry()
 	},
 	Example: `
-# List Kubernetes Bhojpur Application configurations
+# List Kubernetes Bhojpur Application runtime configurations
 appctl configurations -k
 `,
 }

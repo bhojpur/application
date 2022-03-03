@@ -75,7 +75,7 @@ func (s *nameResolutionRegistry) Create(name, version string) (nr.Resolver, erro
 	if method, ok := s.getResolver(createFullName(name), version); ok {
 		return method(), nil
 	}
-	return nil, errors.Errorf("couldn't find name resolver %s/%s", name, version)
+	return nil, errors.Errorf("couldn't find Bhojpur Application runtime name resolver %s/%s", name, version)
 }
 
 func (s *nameResolutionRegistry) getResolver(name, version string) (func() nr.Resolver, bool) {

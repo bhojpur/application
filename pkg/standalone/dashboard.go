@@ -30,14 +30,14 @@ import (
 
 // NewDashboardCmd creates the command to run dashboard.
 func NewDashboardCmd(port int) *exec.Cmd {
-	// Use the default binary install location
+	// Use the default Bhojpur Application runtime binary install location
 	dashboardPath := defaultAppBinPath()
 	binaryName := "dashboard"
 	if runtime.GOOS == appWindowsOS {
 		binaryName = "dashboard.exe"
 	}
 
-	// Construct command to run dashboard
+	// Construct command to run Bhojpur Dashboard
 	return &exec.Cmd{
 		Path:   filepath.Join(dashboardPath, binaryName),
 		Args:   []string{binaryName, "--port", strconv.Itoa(port)},

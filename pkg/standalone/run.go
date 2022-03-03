@@ -110,7 +110,7 @@ func (config *RunConfig) validatePort(portName string, portPtr *int, meta *AppMe
 	}
 
 	if meta.portExists(*portPtr) {
-		return fmt.Errorf("invalid configuration for %s. Port %v is not available", portName, *portPtr)
+		return fmt.Errorf("invalid Bhojpur Application runtime configuration for %s. Port %v is not available", portName, *portPtr)
 	}
 	return nil
 }

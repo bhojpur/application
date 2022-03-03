@@ -85,7 +85,7 @@ func assertCommonArgs(t *testing.T, basicConfig *RunConfig, output *RunOutput) {
 	assert.Equal(t, 8000, output.AppHTTPPort)
 	assert.Equal(t, 50001, output.AppGRPCPort)
 
-	assert.Contains(t, output.AppCMD.Args[0], "appsvr")
+	assert.Contains(t, output.SvrCMD.Args[0], "appsvr")
 	assertArgumentEqual(t, "app-id", "MyID", output.AppCMD.Args)
 	assertArgumentEqual(t, "app-http-port", "8000", output.AppCMD.Args)
 	assertArgumentEqual(t, "app-grpc-port", "50001", output.AppCMD.Args)

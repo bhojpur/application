@@ -70,7 +70,7 @@ func (s *configurationStoreRegistry) Create(name, version string) (configuration
 	if method, ok := s.getConfigurationStore(name, version); ok {
 		return method(), nil
 	}
-	return nil, errors.Errorf("couldn't find configuration store %s/%s", name, version)
+	return nil, errors.Errorf("couldn't find Bhojpur Application runtime configuration store %s/%s", name, version)
 }
 
 func (s *configurationStoreRegistry) getConfigurationStore(name, version string) (func() configuration.Store, bool) {

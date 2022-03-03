@@ -136,7 +136,7 @@ func Init(runtimeVersion, dashboardVersion string, dockerNetwork string, slimMod
 		var err error
 		dashboardVersion, err = cli_ver.GetDashboardVersion()
 		if err != nil {
-			utils.WarningStatusEvent(os.Stdout, "cannot get the latest dashboard version: '%s'. Try specifying --dashboard-version=<desired_version>", err)
+			utils.WarningStatusEvent(os.Stdout, "cannot get the latest Bhojpur Dashboard version: '%s'. Try specifying --dashboard-version=<desired_version>", err)
 			utils.WarningStatusEvent(os.Stdout, "continuing, but Bhojpur Dashboard will be unavailable")
 		}
 	}
@@ -156,7 +156,7 @@ func Init(runtimeVersion, dashboardVersion string, dockerNetwork string, slimMod
 	errorChan := make(chan error)
 	initSteps := []func(*sync.WaitGroup, chan<- error, string, string, string, string){}
 	if slimMode {
-		// Install 3 binaries in slim mode: appsvr, dashboard, placement
+		// Install three binaries only in slim mode: appsvr, dashboard, placement
 		wg.Add(3)
 		initSteps = append(initSteps, createSlimConfiguration)
 	} else if dashboardVersion != "" {
@@ -172,7 +172,7 @@ func Init(runtimeVersion, dashboardVersion string, dockerNetwork string, slimMod
 	// Init other configurations, containers
 	wg.Add(len(initSteps))
 
-	msg := "Downloading binaries and setting up components..."
+	msg := "Downloading Bhojpur Application binaries and setting up components..."
 	stopSpinning := utils.Spinner(os.Stdout, msg)
 	defer stopSpinning(utils.Failure)
 
@@ -213,7 +213,7 @@ func Init(runtimeVersion, dashboardVersion string, dockerNetwork string, slimMod
 
 	stopSpinning(utils.Success)
 
-	msg = "Downloaded binaries and completed components set up."
+	msg = "Downloaded Bhojpur Application binaries and completed components set up."
 	utils.SuccessStatusEvent(os.Stdout, msg)
 	utils.InfoStatusEvent(os.Stdout, "%s binary has been installed to %s.", appRuntimeFilePrefix, appBinDir)
 	if slimMode {
@@ -791,7 +791,7 @@ func moveFileToPath(filepath string, installLocation string) (string, error) {
 
 	if strings.HasPrefix(fileName, appRuntimeFilePrefix) && installLocation != "" {
 		color.Set(color.FgYellow)
-		fmt.Printf("\nBhojpur Application runtime installed to %s, you may run the following to add it to your path if you want to run appsvr directly:\n", destDir)
+		fmt.Printf("\nBhojpur Application runtime installed to %s, you may run the following to add it to your PATH if you want to run appsvr directly:\n", destDir)
 		fmt.Printf("    export PATH=$PATH:%s\n", destDir)
 		color.Unset()
 	}

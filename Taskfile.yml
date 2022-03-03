@@ -21,7 +21,17 @@ tasks:
         - CGO_ENABLED=0 GOOS=darwin GOARCH=amd64 GOFLAGS=-mod=mod go build -o bin/sentry cmd/sentry/main.go
         - chmod 755 ./bin/appctl ./bin/appsvr ./bin/injector ./bin/operator ./bin/placement ./bin/sentry
         - cp ./bin/appctl $GOPATH/bin
+        - cp ./bin/appctl $HOME/.bhojpur/bin
         - cp ./bin/appsvr $GOPATH/bin
+        - cp ./bin/appsvr $HOME/.bhojpur/bin
+        - cp ./bin/injector $GOPATH/bin
+        - cp ./bin/injector $HOME/.bhojpur/bin
+        - cp ./bin/operator $GOPATH/bin
+        - cp ./bin/operator $HOME/.bhojpur/bin
+        - cp ./bin/placement $GOPATH/bin
+        - cp ./bin/placement $HOME/.bhojpur/bin
+        - cp ./bin/sentry $GOPATH/bin
+        - cp ./bin/sentry $HOME/.bhojpur/bin
 
     build-web:
         desc: Build the web application

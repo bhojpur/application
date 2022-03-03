@@ -102,7 +102,7 @@ func (b *bindingsRegistry) CreateInputBinding(name, version string) (bindings.In
 	if method, ok := b.getInputBinding(name, version); ok {
 		return method(), nil
 	}
-	return nil, errors.Errorf("couldn't find input binding %s/%s", name, version)
+	return nil, errors.Errorf("couldn't find Bhojpur Application runtime input binding %s/%s", name, version)
 }
 
 // CreateOutputBinding Create instantiates an output binding based on `name`.

@@ -79,7 +79,7 @@ func (p *httpMiddlewareRegistry) Create(name, version string, metadata middlewar
 	if method, ok := p.getMiddleware(name, version); ok {
 		mid, err := method(metadata)
 		if err != nil {
-			return nil, errors.Errorf("error creating HTTP middleware %s/%s: %s", name, version, err)
+			return nil, errors.Errorf("error creating Bhojpur Application runtime HTTP middleware %s/%s: %s", name, version, err)
 		}
 		return mid, nil
 	}

@@ -27,7 +27,7 @@ type AppProcess interface {
 type appProcess struct {
 }
 
-// Client is the interface the wraps all the methods exposed by the Bhojpur Application CLI.
+// Client is the interface that wraps all the methods exposed by the Bhojpur Application CLI.
 type Client interface {
 	// Invoke is a command to invoke a remote or local Bhojpur Application instance
 	Invoke(appID, method string, data []byte, verb string, socket string) (string, error)

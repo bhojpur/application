@@ -80,7 +80,7 @@ appctl init -s
 		utils.PendingStatusEvent(os.Stdout, "Making the jump to the Bhojpur.NET platform...")
 
 		if kubernetesMode {
-			utils.InfoStatusEvent(os.Stdout, "Note: To install Bhojpur Application using Helm, see here: https://docs.bhojur.net/getting-started/install-on-kubernetes/#install-with-helm-advanced\n")
+			utils.InfoStatusEvent(os.Stdout, "Note: To install Bhojpur Application runtime using Helm, see here: https://docs.bhojur.net/getting-started/install-on-kubernetes/#install-with-helm-advanced\n")
 
 			config := kubernetes.InitConfiguration{
 				Namespace:  initNamespace,
@@ -139,6 +139,6 @@ func init() {
 	InitCmd.Flags().String("network", "", "The Docker network on which to deploy the Bhojpur Application runtime")
 	InitCmd.Flags().BoolP("help", "h", false, "Print this help message")
 	InitCmd.Flags().StringArrayVar(&values, "set", []string{}, "set values on the command line (can specify multiple or separate values with commas: key1=val1,key2=val2)")
-	InitCmd.Flags().String("image-repository", "", "Custom/Private docker image repository url")
+	InitCmd.Flags().String("image-repository", "", "Custom/Private Docker image repository url")
 	rootCmd.AddCommand(InitCmd)
 }

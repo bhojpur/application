@@ -75,7 +75,7 @@ func (p *pubSubRegistry) Create(name, version string) (pubsub.PubSub, error) {
 	if method, ok := p.getPubSub(name, version); ok {
 		return method(), nil
 	}
-	return nil, errors.Errorf("couldn't find message bus %s/%s", name, version)
+	return nil, errors.Errorf("couldn't find Bhojpur Application runtime message bus %s/%s", name, version)
 }
 
 func (p *pubSubRegistry) getPubSub(name, version string) (func() pubsub.PubSub, bool) {

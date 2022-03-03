@@ -77,7 +77,7 @@ func List() ([]ListOutput, error) {
 	// Populates the map if all data is available for the sidecar.
 	for _, proc := range processes {
 		executable := strings.ToLower(proc.Executable())
-		if (executable == "appctl") || (executable == "appctl.exe") {
+		if (executable == "appsvr") || (executable == "appsvr.exe") {
 			procDetails, err := process.NewProcess(int32(proc.Pid()))
 			if err != nil {
 				continue

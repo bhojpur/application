@@ -76,7 +76,7 @@ func (s *secretStoreRegistry) Create(name, version string) (secretstores.SecretS
 		return method(), nil
 	}
 
-	return nil, errors.Errorf("couldn't find secret store %s/%s", name, version)
+	return nil, errors.Errorf("couldn't find Bhojpur Application runtime secret store %s/%s", name, version)
 }
 
 func (s *secretStoreRegistry) getSecretStore(name, version string) (func() secretstores.SecretStore, bool) {

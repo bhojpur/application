@@ -261,7 +261,7 @@ func NewAppRuntime(runtimeConfig *Config, globalConfig *config.Configuration, ac
 // Run performs initialization of the runtime with the runtime and global configurations.
 func (a *AppRuntime) Run(opts ...Option) error {
 	start := time.Now().UTC()
-	log.Infof("%s mode configured", a.runtimeConfig.Mode)
+	log.Infof("Bhojpur Application %s mode configured", a.runtimeConfig.Mode)
 	log.Infof("app id: %s", a.runtimeConfig.ID)
 
 	var o runtimeOpts
@@ -278,7 +278,8 @@ func (a *AppRuntime) Run(opts ...Option) error {
 	log.Infof("Bhojpur Application runtime initialized. Status: Running. Init Elapsed %vms", d)
 
 	if a.appHTTPAPI != nil {
-		// gRPC server start failure is logged as Fatal in initRuntime method. Setting the status only when runtime is initialized.
+		// gRPC server start failure is logged as Fatal in initRuntime method. Setting
+		// the status only when runtime is initialized.
 		a.appHTTPAPI.MarkStatusAsReady()
 	}
 
@@ -297,7 +298,7 @@ func (a *AppRuntime) getOperatorClient() (operatorv1pb.OperatorClient, error) {
 	if a.runtimeConfig.Mode == utils.KubernetesMode {
 		client, _, err := client.GetOperatorClient(a.runtimeConfig.Kubernetes.ControlPlaneAddress, security.TLSServerName, a.runtimeConfig.CertChain)
 		if err != nil {
-			return nil, errors.Wrap(err, "error creating operator client")
+			return nil, errors.Wrap(err, "error creating Bhojpur Application runtime operator client")
 		}
 		return client, nil
 	}
@@ -329,7 +330,7 @@ func (a *AppRuntime) initRuntime(opts *runtimeOpts) error {
 	// Initialize metrics only if MetricSpec is enabled.
 	if a.globalConfig.Spec.MetricSpec.Enabled {
 		if err := diag.InitMetrics(a.runtimeConfig.ID); err != nil {
-			log.Errorf("failed to initialize metrics: %v", err)
+			log.Errorf("failed to initialize Bhojpur Application runtime metrics: %v", err)
 		}
 	}
 
@@ -354,7 +355,7 @@ func (a *AppRuntime) initRuntime(opts *runtimeOpts) error {
 	a.nameResolutionRegistry.Register(opts.nameResolutions...)
 	err = a.initNameResolution()
 	if err != nil {
-		log.Warnf("failed to init name resolution: %s", err)
+		log.Warnf("failed to init Bhojpur Application runtime name resolution: %s", err)
 	}
 
 	a.pubSubRegistry.Register(opts.pubsubs...)
@@ -373,14 +374,14 @@ func (a *AppRuntime) initRuntime(opts *runtimeOpts) error {
 	a.appendBuiltinSecretStore()
 	err = a.loadComponents(opts)
 	if err != nil {
-		log.Warnf("failed to load components: %s", err)
+		log.Warnf("failed to load Bhojpur Application runtime components: %s", err)
 	}
 
 	a.flushOutstandingComponents()
 
 	pipeline, err := a.buildHTTPPipeline()
 	if err != nil {
-		log.Warnf("failed to build HTTP pipeline: %s", err)
+		log.Warnf("failed to build Bhojpur Application runtime HTTP pipeline: %s", err)
 	}
 
 	// Setup allow/deny list for secrets
@@ -394,23 +395,23 @@ func (a *AppRuntime) initRuntime(opts *runtimeOpts) error {
 
 	err = a.startGRPCAPIServer(grpcAPI, a.runtimeConfig.APIGRPCPort)
 	if err != nil {
-		log.Fatalf("failed to start API gRPC server: %s", err)
+		log.Fatalf("failed to start Bhojpur Application API gRPC server: %s", err)
 	}
 	if a.runtimeConfig.UnixDomainSocket != "" {
-		log.Info("API gRPC server is running on a unix domain socket")
+		log.Info("Bhojpur Application API gRPC server is running on a unix domain socket")
 	} else {
-		log.Infof("API gRPC server is running on port %v", a.runtimeConfig.APIGRPCPort)
+		log.Infof("Bhojpur Application API gRPC server is running on port %v", a.runtimeConfig.APIGRPCPort)
 	}
 
 	// Start HTTP Server
 	err = a.startHTTPServer(a.runtimeConfig.HTTPPort, a.runtimeConfig.PublicPort, a.runtimeConfig.ProfilePort, a.runtimeConfig.AllowedOrigins, pipeline)
 	if err != nil {
-		log.Fatalf("failed to start HTTP server: %s", err)
+		log.Fatalf("failed to start Bhojpur Application runtime HTTP server: %s", err)
 	}
 	if a.runtimeConfig.UnixDomainSocket != "" {
-		log.Info("http server is running on a unix domain socket")
+		log.Info("runtime Bhojpur Application runtime HTTP server is running on a unix domain socket")
 	} else {
-		log.Infof("http server is running on port %v", a.runtimeConfig.HTTPPort)
+		log.Infof("runtime Bhojpur Application runtime HTTP server is running on port %v", a.runtimeConfig.HTTPPort)
 	}
 	log.Infof("The request body size parameter is: %v", a.runtimeConfig.MaxRequestBodySize)
 
@@ -428,7 +429,7 @@ func (a *AppRuntime) initRuntime(opts *runtimeOpts) error {
 
 	err = a.createAppChannel()
 	if err != nil {
-		log.Warnf("failed to open %s channel to app: %s", string(a.runtimeConfig.ApplicationProtocol), err)
+		log.Warnf("failed to open %s channel to application: %s", string(a.runtimeConfig.ApplicationProtocol), err)
 	}
 	a.appHTTPAPI.SetAppChannel(a.appChannel)
 	grpcAPI.SetAppChannel(a.appChannel)
@@ -442,7 +443,7 @@ func (a *AppRuntime) initRuntime(opts *runtimeOpts) error {
 
 	err = a.initActors()
 	if err != nil {
-		log.Warnf("failed to init actors: %s", err)
+		log.Warnf("failed to init Bhojpur Application runtime actors: %s", err)
 	}
 
 	a.appHTTPAPI.SetActorRuntime(a.actor)
@@ -461,14 +462,14 @@ func (a *AppRuntime) initRuntime(opts *runtimeOpts) error {
 			SecretStores:    a.secretStores,
 			PubSubs:         a.pubSubs,
 		}); err != nil {
-			log.Fatalf("failed to register components with callback: %s", err)
+			log.Fatalf("failed to register Bhojpur Application runtime components with callback: %s", err)
 		}
 	}
 
 	a.startSubscribing()
 	err = a.startReadingFromBindings()
 	if err != nil {
-		log.Warnf("failed to read from bindings: %s ", err)
+		log.Warnf("failed to read from Bhojpur Application runtime bindings: %s ", err)
 	}
 	return nil
 }
@@ -498,7 +499,7 @@ func (a *AppRuntime) buildHTTPPipeline() (http_middleware.Pipeline, error) {
 			if err != nil {
 				return http_middleware.Pipeline{}, err
 			}
-			log.Infof("enabled %s/%s http middleware", middlewareSpec.Type, middlewareSpec.Version)
+			log.Infof("enabled %s/%s HTTP middleware", middlewareSpec.Type, middlewareSpec.Version)
 			handlers = append(handlers, handler)
 		}
 	}
@@ -508,14 +509,14 @@ func (a *AppRuntime) buildHTTPPipeline() (http_middleware.Pipeline, error) {
 func (a *AppRuntime) initBinding(c components_v1alpha1.Component) error {
 	if a.bindingsRegistry.HasOutputBinding(c.Spec.Type, c.Spec.Version) {
 		if err := a.initOutputBinding(c); err != nil {
-			log.Errorf("failed to init output bindings: %s", err)
+			log.Errorf("failed to init Bhojpur Application runtime output bindings: %s", err)
 			return err
 		}
 	}
 
 	if a.bindingsRegistry.HasInputBinding(c.Spec.Type, c.Spec.Version) {
 		if err := a.initInputBinding(c); err != nil {
-			log.Errorf("failed to init input bindings: %s", err)
+			log.Errorf("failed to init Bhojpur Application runtime input bindings: %s", err)
 			return err
 		}
 	}
@@ -606,7 +607,7 @@ func (a *AppRuntime) beginPubSub(name string, ps pubsub.PubSub) error {
 				path:       routePath,
 			})
 		}); err != nil {
-			log.Errorf("failed to subscribe to topic %s: %s", topic, err)
+			log.Errorf("failed to subscribe to Bhojpur Application runtime topic %s: %s", topic, err)
 		}
 	}
 
@@ -680,7 +681,7 @@ func (a *AppRuntime) initProxy() {
 	a.proxy = messaging.NewProxy(a.grpc.GetGRPCConnection, a.runtimeConfig.ID,
 		fmt.Sprintf("%s:%d", channel.DefaultChannelAddress, a.runtimeConfig.ApplicationPort), a.runtimeConfig.InternalGRPCPort, a.accessControlList, a.runtimeConfig.AppSSL)
 
-	log.Info("gRPC proxy enabled")
+	log.Info("Bhojpur Application runtime gRPC proxy enabled")
 }
 
 func (a *AppRuntime) beginComponentsUpdates() error {
@@ -720,7 +721,7 @@ func (a *AppRuntime) beginComponentsUpdates() error {
 					PodName:   a.podName,
 				})
 				if err != nil {
-					log.Errorf("error from operator stream: %s", err)
+					log.Errorf("error from Bhojpur Application runtime operator stream: %s", err)
 					return err
 				}
 				return nil
@@ -733,7 +734,7 @@ func (a *AppRuntime) beginComponentsUpdates() error {
 						Namespace: a.namespace,
 					})
 					if err != nil {
-						log.Errorf("error listing components: %s", err)
+						log.Errorf("error listing Bhojpur Application runtime components: %s", err)
 						return err
 					}
 
@@ -754,7 +755,7 @@ func (a *AppRuntime) beginComponentsUpdates() error {
 				if err != nil {
 					// Retry on stream error.
 					needList = true
-					log.Errorf("error from operator stream: %s", err)
+					log.Errorf("error from Bhojpur Application runtime operator stream: %s", err)
 					break
 				}
 
@@ -822,7 +823,7 @@ func (a *AppRuntime) sendToOutputBinding(name string, req *bindings.InvokeReques
 		}
 		return nil, errors.Errorf("binding %s does not support operation %s. supported operations:%s", name, req.Operation, strings.Join(supported, " "))
 	}
-	return nil, errors.Errorf("couldn't find output binding %s", name)
+	return nil, errors.Errorf("couldn't find Bhojpur Application runtime output binding %s", name)
 }
 
 func (a *AppRuntime) onAppResponse(response *bindings.AppResponse) error {
@@ -831,7 +832,7 @@ func (a *AppRuntime) onAppResponse(response *bindings.AppResponse) error {
 			if a.stateStores != nil {
 				err := a.stateStores[response.StoreName].BulkSet(reqs)
 				if err != nil {
-					log.Errorf("error saving state from app response: %s", err)
+					log.Errorf("error saving Bhojpur Application runtime state from application response: %s", err)
 				}
 			}
 		}(response.State)
@@ -890,7 +891,7 @@ func (a *AppRuntime) sendBindingEventToApp(bindingName string, data []byte, meta
 			if resp != nil {
 				body = resp.Data
 			}
-			return nil, errors.Wrap(err, fmt.Sprintf("error invoking app, body: %s", string(body)))
+			return nil, errors.Wrap(err, fmt.Sprintf("error invoking application, body: %s", string(body)))
 		}
 		if resp != nil {
 			if resp.Concurrency == runtimev1pb.BindingEventResponse_PARALLEL {
@@ -925,7 +926,7 @@ func (a *AppRuntime) sendBindingEventToApp(bindingName string, data []byte, meta
 
 		resp, err := a.appChannel.InvokeMethod(ctx, req)
 		if err != nil {
-			return nil, errors.Wrap(err, "error invoking app")
+			return nil, errors.Wrap(err, "error invoking application")
 		}
 
 		if span != nil {
@@ -939,7 +940,7 @@ func (a *AppRuntime) sendBindingEventToApp(bindingName string, data []byte, meta
 		// ::TODO report metrics for http, such as grpc
 		if resp.Status().Code != nethttp.StatusOK {
 			_, body := resp.RawData()
-			return nil, errors.Errorf("fails to send binding event to http app channel, status code: %d body: %s", resp.Status().Code, string(body))
+			return nil, errors.Errorf("fails to send binding event to HTTP application channel, status code: %d body: %s", resp.Status().Code, string(body))
 		}
 
 		if resp.Message().Data != nil && len(resp.Message().Data.Value) > 0 {
@@ -949,7 +950,7 @@ func (a *AppRuntime) sendBindingEventToApp(bindingName string, data []byte, meta
 
 	if len(response.State) > 0 || len(response.To) > 0 {
 		if err := a.onAppResponse(&response); err != nil {
-			log.Errorf("error executing app response: %s", err)
+			log.Errorf("error executing application response: %s", err)
 		}
 	}
 
@@ -961,7 +962,7 @@ func (a *AppRuntime) readFromBinding(name string, binding bindings.InputBinding)
 		if resp != nil {
 			b, err := a.sendBindingEventToApp(name, resp.Data, resp.Metadata)
 			if err != nil {
-				log.Debugf("error from app consumer for binding [%s]: %s", name, err)
+				log.Debugf("error from application consumer for binding [%s]: %s", name, err)
 				return nil, err
 			}
 			return b, err
@@ -1077,7 +1078,7 @@ func (a *AppRuntime) isAppSubscribedToBinding(binding string) bool {
 func (a *AppRuntime) initInputBinding(c components_v1alpha1.Component) error {
 	binding, err := a.bindingsRegistry.CreateInputBinding(c.Spec.Type, c.Spec.Version)
 	if err != nil {
-		log.Warnf("failed to create input binding %s (%s/%s): %s", c.ObjectMeta.Name, c.Spec.Type, c.Spec.Version, err)
+		log.Warnf("failed to create Bhojpur Application runtime input binding %s (%s/%s): %s", c.ObjectMeta.Name, c.Spec.Type, c.Spec.Version, err)
 		diag.DefaultMonitoring.ComponentInitFailed(c.Spec.Type, "creation")
 		return err
 	}
@@ -1086,12 +1087,12 @@ func (a *AppRuntime) initInputBinding(c components_v1alpha1.Component) error {
 		Name:       c.ObjectMeta.Name,
 	})
 	if err != nil {
-		log.Errorf("failed to init input binding %s (%s/%s): %s", c.ObjectMeta.Name, c.Spec.Type, c.Spec.Version, err)
+		log.Errorf("failed to init Bhojpur Application runtime input binding %s (%s/%s): %s", c.ObjectMeta.Name, c.Spec.Type, c.Spec.Version, err)
 		diag.DefaultMonitoring.ComponentInitFailed(c.Spec.Type, "init")
 		return err
 	}
 
-	log.Infof("successful init for input binding %s (%s/%s)", c.ObjectMeta.Name, c.Spec.Type, c.Spec.Version)
+	log.Infof("successful init for Bhojpur Application runtime input binding %s (%s/%s)", c.ObjectMeta.Name, c.Spec.Type, c.Spec.Version)
 	a.inputBindingRoutes[c.Name] = c.Name
 	for _, item := range c.Spec.Metadata {
 		if item.Name == "route" {
@@ -1106,7 +1107,7 @@ func (a *AppRuntime) initInputBinding(c components_v1alpha1.Component) error {
 func (a *AppRuntime) initOutputBinding(c components_v1alpha1.Component) error {
 	binding, err := a.bindingsRegistry.CreateOutputBinding(c.Spec.Type, c.Spec.Version)
 	if err != nil {
-		log.Warnf("failed to create output binding %s (%s/%s): %s", c.ObjectMeta.Name, c.Spec.Type, c.Spec.Version, err)
+		log.Warnf("failed to create Bhojpur Application runtime output binding %s (%s/%s): %s", c.ObjectMeta.Name, c.Spec.Type, c.Spec.Version, err)
 		diag.DefaultMonitoring.ComponentInitFailed(c.Spec.Type, "creation")
 		return err
 	}
@@ -1117,11 +1118,11 @@ func (a *AppRuntime) initOutputBinding(c components_v1alpha1.Component) error {
 			Name:       c.ObjectMeta.Name,
 		})
 		if err != nil {
-			log.Errorf("failed to init output binding %s (%s/%s): %s", c.ObjectMeta.Name, c.Spec.Type, c.Spec.Version, err)
+			log.Errorf("failed to init Bhojpur Application runtime output binding %s (%s/%s): %s", c.ObjectMeta.Name, c.Spec.Type, c.Spec.Version, err)
 			diag.DefaultMonitoring.ComponentInitFailed(c.Spec.Type, "init")
 			return err
 		}
-		log.Infof("successful init for output binding %s (%s/%s)", c.ObjectMeta.Name, c.Spec.Type, c.Spec.Version)
+		log.Infof("successful init for Bhojpur Application runtime output binding %s (%s/%s)", c.ObjectMeta.Name, c.Spec.Type, c.Spec.Version)
 		a.outputBindings[c.ObjectMeta.Name] = binding
 		diag.DefaultMonitoring.ComponentInitialized(c.Spec.Type)
 	}
@@ -1131,7 +1132,7 @@ func (a *AppRuntime) initOutputBinding(c components_v1alpha1.Component) error {
 func (a *AppRuntime) initConfiguration(s components_v1alpha1.Component) error {
 	store, err := a.configurationStoreRegistry.Create(s.Spec.Type, s.Spec.Version)
 	if err != nil {
-		log.Warnf("error creating configuration store %s (%s/%s): %s", s.ObjectMeta.Name, s.Spec.Type, s.Spec.Version, err)
+		log.Warnf("error creating Bhojpur Application runtime configuration store %s (%s/%s): %s", s.ObjectMeta.Name, s.Spec.Type, s.Spec.Version, err)
 		diag.DefaultMonitoring.ComponentInitFailed(s.Spec.Type, "creation")
 		return err
 	}
@@ -1142,7 +1143,7 @@ func (a *AppRuntime) initConfiguration(s components_v1alpha1.Component) error {
 		})
 		if err != nil {
 			diag.DefaultMonitoring.ComponentInitFailed(s.Spec.Type, "init")
-			log.Warnf("error initializing configuration store %s (%s/%s): %s", s.ObjectMeta.Name, s.Spec.Type, s.Spec.Version, err)
+			log.Warnf("error initializing Bhojpur Application runtime configuration store %s (%s/%s): %s", s.ObjectMeta.Name, s.Spec.Type, s.Spec.Version, err)
 			return err
 		}
 
@@ -1157,7 +1158,7 @@ func (a *AppRuntime) initConfiguration(s components_v1alpha1.Component) error {
 func (a *AppRuntime) initState(s components_v1alpha1.Component) error {
 	store, err := a.stateStoreRegistry.Create(s.Spec.Type, s.Spec.Version)
 	if err != nil {
-		log.Warnf("error creating state store %s (%s/%s): %s", s.ObjectMeta.Name, s.Spec.Type, s.Spec.Version, err)
+		log.Warnf("error creating Bhojpur Application runtime state store %s (%s/%s): %s", s.ObjectMeta.Name, s.Spec.Type, s.Spec.Version, err)
 		diag.DefaultMonitoring.ComponentInitFailed(s.Spec.Type, "creation")
 		return err
 	}
@@ -1168,7 +1169,7 @@ func (a *AppRuntime) initState(s components_v1alpha1.Component) error {
 			secretStore := a.getSecretStore(secretStoreName)
 			encKeys, encErr := encryption.ComponentEncryptionKey(s, secretStore)
 			if encErr != nil {
-				log.Errorf("error initializing state store encryption %s (%s/%s): %s", s.ObjectMeta.Name, s.Spec.Type, s.Spec.Version, encErr)
+				log.Errorf("error initializing Bhojpur Application runtime state store encryption %s (%s/%s): %s", s.ObjectMeta.Name, s.Spec.Type, s.Spec.Version, encErr)
 				diag.DefaultMonitoring.ComponentInitFailed(s.Spec.Type, "creation")
 				return encErr
 			}
@@ -1176,7 +1177,7 @@ func (a *AppRuntime) initState(s components_v1alpha1.Component) error {
 			if encKeys.Primary.Key != "" {
 				ok := encryption.AddEncryptedStateStore(s.ObjectMeta.Name, encKeys)
 				if ok {
-					log.Infof("automatic encryption enabled for state store %s", s.ObjectMeta.Name)
+					log.Infof("automatic encryption enabled for Bhojpur Application runtime state store %s", s.ObjectMeta.Name)
 				}
 			}
 		}
@@ -1187,7 +1188,7 @@ func (a *AppRuntime) initState(s components_v1alpha1.Component) error {
 		})
 		if err != nil {
 			diag.DefaultMonitoring.ComponentInitFailed(s.Spec.Type, "init")
-			log.Warnf("error initializing state store %s (%s/%s): %s", s.ObjectMeta.Name, s.Spec.Type, s.Spec.Version, err)
+			log.Warnf("error initializing Bhojpur Application runtime state store %s (%s/%s): %s", s.ObjectMeta.Name, s.Spec.Type, s.Spec.Version, err)
 			return err
 		}
 
@@ -1195,7 +1196,7 @@ func (a *AppRuntime) initState(s components_v1alpha1.Component) error {
 		err = state_loader.SaveStateConfiguration(s.ObjectMeta.Name, props)
 		if err != nil {
 			diag.DefaultMonitoring.ComponentInitFailed(s.Spec.Type, "init")
-			log.Warnf("error save state keyprefix: %s", err.Error())
+			log.Warnf("error save Bhojpur Application runtime state keyprefix: %s", err.Error())
 			return err
 		}
 
@@ -1204,10 +1205,10 @@ func (a *AppRuntime) initState(s components_v1alpha1.Component) error {
 		if actorStoreSpecified == "true" {
 			a.actorStateStoreLock.Lock()
 			if a.actorStateStoreName == "" {
-				log.Infof("detected actor state store: %s", s.ObjectMeta.Name)
+				log.Infof("detected actor Bhojpur Application runtime state store: %s", s.ObjectMeta.Name)
 				a.actorStateStoreName = s.ObjectMeta.Name
 			} else if a.actorStateStoreName != s.ObjectMeta.Name {
-				log.Fatalf("detected duplicate actor state store: %s", s.ObjectMeta.Name)
+				log.Fatalf("detected duplicate actor Bhojpur Application runtime state store: %s", s.ObjectMeta.Name)
 			}
 			a.actorStateStoreLock.Unlock()
 		}
@@ -1257,7 +1258,7 @@ func (a *AppRuntime) getTopicRoutes() (map[string]TopicRoute, error) {
 	topicRoutes := make(map[string]TopicRoute)
 
 	if a.appChannel == nil {
-		log.Warn("app channel not initialized, make sure -app-port is specified if pubsub subscription is required")
+		log.Warn("application channel not initialized, make sure --app-port is specified if pubsub subscription is required")
 		return topicRoutes, nil
 	}
 
@@ -1309,7 +1310,7 @@ func (a *AppRuntime) getTopicRoutes() (map[string]TopicRoute, error) {
 			for topic := range v.routes {
 				topics = append(topics, topic)
 			}
-			log.Infof("app is subscribed to the following topics: %v through pubsub=%s", topics, pubsubName)
+			log.Infof("application is subscribed to the following topics: %v through pubsub=%s", topics, pubsubName)
 		}
 	}
 	a.topicRoutes = topicRoutes
@@ -1335,7 +1336,7 @@ func (a *AppRuntime) initPubSub(c components_v1alpha1.Component) error {
 		Properties: properties,
 	})
 	if err != nil {
-		log.Warnf("error initializing pub sub %s/%s: %s", c.Spec.Type, c.Spec.Version, err)
+		log.Warnf("error initializing pubsub %s/%s: %s", c.Spec.Type, c.Spec.Version, err)
 		diag.DefaultMonitoring.ComponentInitFailed(c.Spec.Type, "init")
 		return err
 	}
@@ -1417,7 +1418,7 @@ func (a *AppRuntime) initNameResolution() error {
 		case utils.StandaloneMode:
 			resolverName = "mdns"
 		default:
-			return errors.Errorf("unable to determine name resolver for %s mode", string(a.runtimeConfig.Mode))
+			return errors.Errorf("unable to determine Bhojpur Application runtime name resolver for %s mode", string(a.runtimeConfig.Mode))
 		}
 	}
 
@@ -1440,18 +1441,18 @@ func (a *AppRuntime) initNameResolution() error {
 	}
 
 	if err != nil {
-		log.Warnf("error creating name resolution resolver %s: %s", resolverName, err)
+		log.Warnf("error creating Bhojpur Application runtime name resolution resolver %s: %s", resolverName, err)
 		return err
 	}
 
 	if err = resolver.Init(resolverMetadata); err != nil {
-		log.Errorf("failed to initialize name resolution resolver %s: %s", resolverName, err)
+		log.Errorf("failed to initialize Bhojpur Application runtime name resolution resolver %s: %s", resolverName, err)
 		return err
 	}
 
 	a.nameResolver = resolver
 
-	log.Infof("Initialized name resolution to %s", resolverName)
+	log.Infof("Initialized Bhojpur Application runtime name resolution to %s", resolverName)
 	return nil
 }
 
@@ -1474,7 +1475,7 @@ func (a *AppRuntime) publishMessageHTTP(ctx context.Context, msg *pubsubSubscrib
 
 	resp, err := a.appChannel.InvokeMethod(ctx, req)
 	if err != nil {
-		return errors.Wrap(err, "error from app channel while sending pub/sub event to app")
+		return errors.Wrap(err, "error from application channel while sending pub/sub event to application")
 	}
 
 	statusCode := int(resp.Status().Code)
@@ -1505,26 +1506,26 @@ func (a *AppRuntime) publishMessageHTTP(ctx context.Context, msg *pubsubSubscrib
 		case pubsub.Success:
 			return nil
 		case pubsub.Retry:
-			return errors.Errorf("RETRY status returned from app while processing pub/sub event %v", cloudEvent[pubsub.IDField])
+			return errors.Errorf("RETRY status returned from application while processing pub/sub event %v", cloudEvent[pubsub.IDField])
 		case pubsub.Drop:
-			log.Warnf("DROP status returned from app while processing pub/sub event %v", cloudEvent[pubsub.IDField])
+			log.Warnf("DROP status returned from application while processing pub/sub event %v", cloudEvent[pubsub.IDField])
 			return nil
 		}
 		// Consider unknown status field as error and retry
-		return errors.Errorf("unknown status returned from app while processing pub/sub event %v: %v", cloudEvent[pubsub.IDField], appResponse.Status)
+		return errors.Errorf("unknown status returned from application while processing pub/sub event %v: %v", cloudEvent[pubsub.IDField], appResponse.Status)
 	}
 
 	if statusCode == nethttp.StatusNotFound {
 		// These are errors that are not retriable, for now it is just 404 but more status codes can be added.
 		// When adding/removing an error here, check if that is also applicable to GRPC since there is a mapping between HTTP and GRPC errors:
 		// https://cloud.google.com/apis/design/errors#handling_errors
-		log.Errorf("non-retriable error returned from app while processing pub/sub event %v: %s. status code returned: %v", cloudEvent[pubsub.IDField], body, statusCode)
+		log.Errorf("non-retriable error returned from application while processing pub/sub event %v: %s. status code returned: %v", cloudEvent[pubsub.IDField], body, statusCode)
 		return nil
 	}
 
 	// Every error from now on is a retriable error.
-	log.Warnf("retriable error returned from app while processing pub/sub event %v, topic: %v, body: %s. status code returned: %v", cloudEvent[pubsub.IDField], cloudEvent[pubsub.TopicField], body, statusCode)
-	return errors.Errorf("retriable error returned from app while processing pub/sub event %v, topic: %v, body: %s. status code returned: %v", cloudEvent[pubsub.IDField], cloudEvent[pubsub.TopicField], body, statusCode)
+	log.Warnf("retriable error returned from application while processing pub/sub event %v, topic: %v, body: %s. status code returned: %v", cloudEvent[pubsub.IDField], cloudEvent[pubsub.TopicField], body, statusCode)
+	return errors.Errorf("retriable error returned from application while processing pub/sub event %v, topic: %v, body: %s. status code returned: %v", cloudEvent[pubsub.IDField], cloudEvent[pubsub.TopicField], body, statusCode)
 }
 
 func (a *AppRuntime) publishMessageGRPC(ctx context.Context, msg *pubsubSubscribedMessage) error {
@@ -1602,12 +1603,12 @@ func (a *AppRuntime) publishMessageGRPC(ctx context.Context, msg *pubsubSubscrib
 		errStatus, hasErrStatus := status.FromError(err)
 		if hasErrStatus && (errStatus.Code() == codes.Unimplemented) {
 			// DROP
-			log.Warnf("non-retriable error returned from app while processing pub/sub event %v: %s", cloudEvent[pubsub.IDField], err)
+			log.Warnf("non-retriable error returned from application while processing pub/sub event %v: %s", cloudEvent[pubsub.IDField], err)
 
 			return nil
 		}
 
-		err = errors.Errorf("error returned from app while processing pub/sub event %v: %s", cloudEvent[pubsub.IDField], err)
+		err = errors.Errorf("error returned from application while processing pub/sub event %v: %s", cloudEvent[pubsub.IDField], err)
 		log.Debug(err)
 
 		// on error from application, return error for redelivery of event
@@ -1620,15 +1621,15 @@ func (a *AppRuntime) publishMessageGRPC(ctx context.Context, msg *pubsubSubscrib
 		// success from protobuf definition
 		return nil
 	case runtimev1pb.TopicEventResponse_RETRY:
-		return errors.Errorf("RETRY status returned from app while processing pub/sub event %v", cloudEvent[pubsub.IDField])
+		return errors.Errorf("RETRY status returned from application while processing pub/sub event %v", cloudEvent[pubsub.IDField])
 	case runtimev1pb.TopicEventResponse_DROP:
-		log.Warnf("DROP status returned from app while processing pub/sub event %v", cloudEvent[pubsub.IDField])
+		log.Warnf("DROP status returned from application while processing pub/sub event %v", cloudEvent[pubsub.IDField])
 
 		return nil
 	}
 
 	// Consider unknown status field as error and retry
-	return errors.Errorf("unknown status returned from app while processing pub/sub event %v: %v", cloudEvent[pubsub.IDField], res.GetStatus())
+	return errors.Errorf("unknown status returned from application while processing pub/sub event %v: %v", cloudEvent[pubsub.IDField], res.GetStatus())
 }
 
 func extractCloudEventProperty(cloudEvent map[string]interface{}, property string) string {
@@ -1653,7 +1654,7 @@ func (a *AppRuntime) initActors() error {
 	a.actorStateStoreLock.Lock()
 	defer a.actorStateStoreLock.Unlock()
 	if a.actorStateStoreName == "" {
-		return errors.New("no actor state store defined")
+		return errors.New("no Bhojpur Application runtime actor state store defined")
 	}
 	actorConfig := actors.NewConfig(a.hostAddress, a.runtimeConfig.ID, a.runtimeConfig.PlacementAddresses, a.runtimeConfig.InternalGRPCPort, a.namespace, a.appConfig)
 	act := actors.NewActors(a.stateStores[a.actorStateStoreName], a.appChannel, a.grpc.GetGRPCConnection, actorConfig, a.runtimeConfig.CertChain, a.globalConfig.Spec.TracingSpec, a.globalConfig.Spec.Features)
@@ -1699,16 +1700,16 @@ func (a *AppRuntime) loadComponents(opts *runtimeOpts) error {
 	case utils.StandaloneMode:
 		loader = components.NewStandaloneComponents(a.runtimeConfig.Standalone)
 	default:
-		return errors.Errorf("components loader for mode %s not found", a.runtimeConfig.Mode)
+		return errors.Errorf("Bhojpur Application runtime components loader for mode %s not found", a.runtimeConfig.Mode)
 	}
 
-	log.Info("loading components")
+	log.Info("loading Bhojpur Application runtime components")
 	comps, err := loader.LoadComponents()
 	if err != nil {
 		return err
 	}
 	for _, comp := range comps {
-		log.Debugf("found component. name: %s, type: %s/%s", comp.ObjectMeta.Name, comp.Spec.Type, comp.Spec.Version)
+		log.Debugf("found Bhojpur Application runtime component. name: %s, type: %s/%s", comp.ObjectMeta.Name, comp.Spec.Type, comp.Spec.Version)
 	}
 
 	authorizedComps := a.getAuthorizedComponents(comps)
@@ -1760,9 +1761,9 @@ func (a *AppRuntime) processComponents() {
 
 		err := a.processComponentAndDependents(comp)
 		if err != nil {
-			e := fmt.Sprintf("process component %s error: %s", comp.Name, err.Error())
+			e := fmt.Sprintf("process Bhojpur Application runtime component %s error: %s", comp.Name, err.Error())
 			if !comp.Spec.IgnoreErrors {
-				log.Warnf("process component error Bhojpur Application process will exited, gracefully to stop")
+				log.Warnf("process component error Bhojpur Application runtime process will exited, gracefully to stop")
 				a.Shutdown(a.runtimeConfig.GracefulShutdownDuration)
 				log.Fatalf(e)
 			}
@@ -1772,15 +1773,15 @@ func (a *AppRuntime) processComponents() {
 }
 
 func (a *AppRuntime) flushOutstandingComponents() {
-	log.Info("waiting for all outstanding components to be processed")
+	log.Info("waiting for all outstanding Bhojpur Application runtime components to be processed")
 	// We flush by sending a no-op component. Since the processComponents goroutine only reads one component at a time,
 	// We know that once the no-op component is read from the channel, all previous components will have been fully processed.
 	a.pendingComponents <- components_v1alpha1.Component{}
-	log.Info("all outstanding components processed")
+	log.Info("all outstanding Bhojpur Application runtime components processed")
 }
 
 func (a *AppRuntime) processComponentAndDependents(comp components_v1alpha1.Component) error {
-	log.Debugf("loading component. name: %s, type: %s/%s", comp.ObjectMeta.Name, comp.Spec.Type, comp.Spec.Version)
+	log.Debugf("loading Bhojpur Application runtime component. name: %s, type: %s/%s", comp.ObjectMeta.Name, comp.Spec.Type, comp.Spec.Version)
 	res := a.preprocessOneComponent(&comp)
 	if res.unreadyDependency != "" {
 		a.pendingComponentDependents[res.unreadyDependency] = append(a.pendingComponentDependents[res.unreadyDependency], comp)
@@ -1810,10 +1811,10 @@ func (a *AppRuntime) processComponentAndDependents(comp components_v1alpha1.Comp
 			return err
 		}
 	case <-time.After(timeout):
-		return fmt.Errorf("init timeout for component %s exceeded after %s", comp.Name, timeout.String())
+		return fmt.Errorf("init timeout for Bhojpur Application runtime component %s exceeded after %s", comp.Name, timeout.String())
 	}
 
-	log.Infof("component loaded. name: %s, type: %s/%s", comp.ObjectMeta.Name, comp.Spec.Type, comp.Spec.Version)
+	log.Infof("Bhojpur Application runtime component loaded. name: %s, type: %s/%s", comp.ObjectMeta.Name, comp.Spec.Type, comp.Spec.Version)
 	a.appendOrReplaceComponents(comp)
 	diag.DefaultMonitoring.ComponentLoaded()
 
@@ -1859,21 +1860,21 @@ func (a *AppRuntime) preprocessOneComponent(comp *components_v1alpha1.Component)
 
 func (a *AppRuntime) stopActor() {
 	if a.actor != nil {
-		log.Info("Shutting down actor")
+		log.Info("Shutting down Bhojpur Application runtime actor")
 		a.actor.Stop()
 	}
 }
 
 // shutdownComponents allows for a graceful shutdown of all runtime internal operations or components.
 func (a *AppRuntime) shutdownComponents() error {
-	log.Info("Shutting down all components")
+	log.Info("Shutting down all Bhojpur Application runtime components")
 	var merr error
 
 	// Close components if they implement `io.Closer`
 	for name, binding := range a.inputBindings {
 		if closer, ok := binding.(io.Closer); ok {
 			if err := closer.Close(); err != nil {
-				err = fmt.Errorf("error closing input binding %s: %w", name, err)
+				err = fmt.Errorf("error closing Bhojpur Application runtime input binding %s: %w", name, err)
 				merr = multierror.Append(merr, err)
 				log.Warn(err)
 			}
@@ -1882,7 +1883,7 @@ func (a *AppRuntime) shutdownComponents() error {
 	for name, binding := range a.outputBindings {
 		if closer, ok := binding.(io.Closer); ok {
 			if err := closer.Close(); err != nil {
-				err = fmt.Errorf("error closing output binding %s: %w", name, err)
+				err = fmt.Errorf("error closing Bhojpur Application runtime output binding %s: %w", name, err)
 				merr = multierror.Append(merr, err)
 				log.Warn(err)
 			}
@@ -1891,7 +1892,7 @@ func (a *AppRuntime) shutdownComponents() error {
 	for name, secretstore := range a.secretStores {
 		if closer, ok := secretstore.(io.Closer); ok {
 			if err := closer.Close(); err != nil {
-				err = fmt.Errorf("error closing secret store %s: %w", name, err)
+				err = fmt.Errorf("error closing Bhojpur Application runtime secret store %s: %w", name, err)
 				merr = multierror.Append(merr, err)
 				log.Warn(err)
 			}
@@ -1899,7 +1900,7 @@ func (a *AppRuntime) shutdownComponents() error {
 	}
 	for name, pubSub := range a.pubSubs {
 		if err := pubSub.Close(); err != nil {
-			err = fmt.Errorf("error closing pub sub %s: %w", name, err)
+			err = fmt.Errorf("error closing Bhojpur Application runtime pubsub %s: %w", name, err)
 			merr = multierror.Append(merr, err)
 			log.Warn(err)
 		}
@@ -1907,7 +1908,7 @@ func (a *AppRuntime) shutdownComponents() error {
 	for name, stateStore := range a.stateStores {
 		if closer, ok := stateStore.(io.Closer); ok {
 			if err := closer.Close(); err != nil {
-				err = fmt.Errorf("error closing state store %s: %w", name, err)
+				err = fmt.Errorf("error closing Bhojpur Application runtime state store %s: %w", name, err)
 				merr = multierror.Append(merr, err)
 				log.Warn(err)
 			}
@@ -1915,7 +1916,7 @@ func (a *AppRuntime) shutdownComponents() error {
 	}
 	if closer, ok := a.nameResolver.(io.Closer); ok {
 		if err := closer.Close(); err != nil {
-			err = fmt.Errorf("error closing name resolver: %w", err)
+			err = fmt.Errorf("error closing Bhojpur Application runtime name resolver: %w", err)
 			merr = multierror.Append(merr, err)
 			log.Warn(err)
 		}
@@ -1943,11 +1944,11 @@ func (a *AppRuntime) Shutdown(duration time.Duration) {
 	defer a.cleanSocket()
 
 	a.stopActor()
-	log.Infof("Bhojpur Application runtime shutting down.")
-	log.Info("Stopping Bhojpur Application APIs")
+	log.Infof("Bhojpur Application runtime engine shutting down.")
+	log.Info("Stopping the Bhojpur Application runtime APIs")
 	for _, closer := range a.apiClosers {
 		if err := closer.Close(); err != nil {
-			log.Warnf("error closing Bhojpur Application API: %v", err)
+			log.Warnf("error closing Bhojpur Application runtime API: %v", err)
 		}
 	}
 	log.Infof("Waiting %s to finish outstanding operations", duration)
@@ -1971,7 +1972,7 @@ func (a *AppRuntime) processComponentSecrets(component components_v1alpha1.Compo
 		secretStoreName := a.authSecretStoreOrDefault(component)
 		secretStore := a.getSecretStore(secretStoreName)
 		if secretStore == nil {
-			log.Warnf("component %s references a secret store that isn't loaded: %s", component.Name, secretStoreName)
+			log.Warnf("component %s references a Bhojpur Application runtime secret store that isn't loaded: %s", component.Name, secretStoreName)
 			return component, secretStoreName
 		}
 
@@ -2060,7 +2061,7 @@ func (a *AppRuntime) blockUntilAppIsReady() {
 		return
 	}
 
-	log.Infof("application protocol: %s. waiting on port %v.  This will block until the app is listening on that port.", string(a.runtimeConfig.ApplicationProtocol), a.runtimeConfig.ApplicationPort)
+	log.Infof("Bhojpur Application runtime protocol: %s. waiting on port %v. This will block until the application is listening on that port.", string(a.runtimeConfig.ApplicationProtocol), a.runtimeConfig.ApplicationPort)
 
 	for {
 		conn, _ := net.DialTimeout("tcp", net.JoinHostPort("localhost", fmt.Sprintf("%v", a.runtimeConfig.ApplicationPort)), time.Millisecond*500)
@@ -2072,7 +2073,7 @@ func (a *AppRuntime) blockUntilAppIsReady() {
 		time.Sleep(time.Millisecond * 50)
 	}
 
-	log.Infof("application discovered on port %v", a.runtimeConfig.ApplicationPort)
+	log.Infof("managed application instance discovered on port %v", a.runtimeConfig.ApplicationPort)
 }
 
 func (a *AppRuntime) loadAppConfiguration() {
@@ -2087,7 +2088,7 @@ func (a *AppRuntime) loadAppConfiguration() {
 
 	if appConfig != nil {
 		a.appConfig = *appConfig
-		log.Info("application configuration loaded")
+		log.Info("managed application configuration loaded")
 	}
 }
 
@@ -2101,16 +2102,16 @@ func (a *AppRuntime) createAppChannel() error {
 		case HTTPProtocol:
 			channelCreatorFn = http_channel.CreateLocalChannel
 		default:
-			return errors.Errorf("cannot create app channel for protocol %s", string(a.runtimeConfig.ApplicationProtocol))
+			return errors.Errorf("cannot create application channel for protocol %s", string(a.runtimeConfig.ApplicationProtocol))
 		}
 
 		ch, err := channelCreatorFn(a.runtimeConfig.ApplicationPort, a.runtimeConfig.MaxConcurrency, a.globalConfig.Spec.TracingSpec, a.runtimeConfig.AppSSL, a.runtimeConfig.MaxRequestBodySize, a.runtimeConfig.ReadBufferSize)
 		if err != nil {
-			log.Infof("app max concurrency set to %v", a.runtimeConfig.MaxConcurrency)
+			log.Infof("application max concurrency set to %v", a.runtimeConfig.MaxConcurrency)
 		}
 		a.appChannel = ch
 	} else {
-		log.Warn("app channel is not initialized. did you make sure to configure an app-port?")
+		log.Warn("application channel is not initialized. did you make sure to configure an app-port?")
 	}
 
 	return nil
@@ -2142,7 +2143,7 @@ func (a *AppRuntime) builtinSecretStore() []components_v1alpha1.Component {
 func (a *AppRuntime) initSecretStore(c components_v1alpha1.Component) error {
 	secretStore, err := a.secretStoresRegistry.Create(c.Spec.Type, c.Spec.Version)
 	if err != nil {
-		log.Warnf("failed to create secret store %s/%s: %s", c.Spec.Type, c.Spec.Version, err)
+		log.Warnf("failed to create Bhojpur Application runtime secret store %s/%s: %s", c.Spec.Type, c.Spec.Version, err)
 		diag.DefaultMonitoring.ComponentInitFailed(c.Spec.Type, "creation")
 		return err
 	}
@@ -2151,7 +2152,7 @@ func (a *AppRuntime) initSecretStore(c components_v1alpha1.Component) error {
 		Properties: a.convertMetadataItemsToProperties(c.Spec.Metadata),
 	})
 	if err != nil {
-		log.Warnf("failed to init secret store %s/%s named %s: %s", c.Spec.Type, c.Spec.Version, c.ObjectMeta.Name, err)
+		log.Warnf("failed to init Bhojpur Application runtime secret store %s/%s named %s: %s", c.Spec.Type, c.Spec.Version, c.ObjectMeta.Name, err)
 		diag.DefaultMonitoring.ComponentInitFailed(c.Spec.Type, "init")
 		return err
 	}
@@ -2196,13 +2197,13 @@ func (a *AppRuntime) getComponents() []components_v1alpha1.Component {
 
 func (a *AppRuntime) establishSecurity(sentryAddress string) error {
 	if !a.runtimeConfig.mtlsEnabled {
-		log.Info("mTLS is disabled. Skipping certificate request and tls validation")
+		log.Info("mTLS is disabled. Skipping certificate request and TLS validation")
 		return nil
 	}
 	if sentryAddress == "" {
 		return errors.New("sentryAddress cannot be empty")
 	}
-	log.Info("mTLS enabled. creating sidecar authenticator")
+	log.Info("mTLS enabled. creating Bhojpur Application runtime sidecar authenticator")
 
 	auth, err := security.GetSidecarAuthenticator(sentryAddress, a.runtimeConfig.CertChain)
 	if err != nil {
@@ -2211,7 +2212,7 @@ func (a *AppRuntime) establishSecurity(sentryAddress string) error {
 	a.authenticator = auth
 	a.grpc.SetAuthenticator(auth)
 
-	log.Info("authenticator created")
+	log.Info("Bhojpur Application runtime authenticator created")
 
 	diag.DefaultMonitoring.MTLSInitCompleted()
 	return nil
@@ -2231,12 +2232,12 @@ func (a *AppRuntime) startSubscribing() {
 
 func (a *AppRuntime) startReadingFromBindings() error {
 	if a.appChannel == nil {
-		return errors.New("app channel not initialized")
+		return errors.New("application channel not initialized")
 	}
 	for name, binding := range a.inputBindings {
 		go func(name string, binding bindings.InputBinding) {
 			if !a.isAppSubscribedToBinding(name) {
-				log.Infof("app has not subscribed to binding %s.", name)
+				log.Infof("application has not subscribed to binding %s.", name)
 				return
 			}
 

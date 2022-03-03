@@ -41,7 +41,7 @@ const (
 	defaultHost = "localhost"
 
 	// defaultLocalPort is the default local port used for port forwarding for `appctl dashboard`.
-	defaultLocalPort = 8080
+	defaultLocalPort = 8000
 
 	// appSystemNamespace is the namespace "app-system" (recommended Bhojpur Application runtime install namespace).
 	appSystemNamespace = "app-system"
@@ -183,7 +183,7 @@ appctl dashboard -k -p 9999
 			// Standalone mode
 			err := standalone.NewDashboardCmd(dashboardLocalPort).Run()
 			if err != nil {
-				utils.FailureStatusEvent(os.Stderr, "Bhojpur Dashboard not found. Is the Bhojpur Application runtime installed?")
+				utils.FailureStatusEvent(os.Stderr, "Bhojpur Dashboard not found. Is the Bhojpur Application runtime engine installed?")
 			}
 		}
 	},

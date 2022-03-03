@@ -70,7 +70,7 @@ func (s *stateStoreRegistry) Create(name, version string) (state.Store, error) {
 	if method, ok := s.getStateStore(name, version); ok {
 		return method(), nil
 	}
-	return nil, errors.Errorf("couldn't find state store %s/%s", name, version)
+	return nil, errors.Errorf("couldn't find Bhojpur Application runtime state store %s/%s", name, version)
 }
 
 func (s *stateStoreRegistry) getStateStore(name, version string) (func() state.Store, bool) {

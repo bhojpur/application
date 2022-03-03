@@ -49,7 +49,7 @@ func List() ([]ListOutput, error) {
 	l := []ListOutput{}
 	for _, p := range podList.Items {
 		for _, c := range p.Spec.Containers {
-			if c.Name == "bhojpur" {
+			if c.Name == "appsvr" {
 				lo := ListOutput{}
 				for i, a := range c.Args {
 					if a == "--app-port" {

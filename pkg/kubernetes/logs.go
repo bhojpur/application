@@ -30,7 +30,7 @@ import (
 )
 
 const (
-	appContainerName      = "bhojpur"
+	appContainerName      = "appsvr"
 	appIDContainerArgName = "--app-id"
 )
 
@@ -47,7 +47,7 @@ func Logs(appID, podName, namespace string) error {
 
 	pods, err := ListPods(client, namespace, nil)
 	if err != nil {
-		return fmt.Errorf("could not get logs %v", err)
+		return fmt.Errorf("could not get Bhojpur Application runtime logs %v", err)
 	}
 
 	if podName == "" {

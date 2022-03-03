@@ -136,33 +136,33 @@ appctl run --app-id myapp --app-port 3000 --app-protocol grpc -- go run main.go
 			var startInfo string
 			if unixDomainSocket != "" {
 				startInfo = fmt.Sprintf(
-					"Starting the Bhojpur Application runtime with id %s. HTTP Socket: %v. gRPC Socket: %v.",
+					"Starting the Bhojpur Application runtime with ID %s. HTTP Socket: %v. gRPC Socket: %v.",
 					output.AppID,
 					utils.GetSocket(unixDomainSocket, output.AppID, "http"),
 					utils.GetSocket(unixDomainSocket, output.AppID, "grpc"))
 			} else {
 				startInfo = fmt.Sprintf(
-					"Starting Bhojpur Application runtime with id %s. HTTP Port: %v. gRPC Port: %v",
+					"Starting Bhojpur Application runtime with ID %s. HTTP Port: %v. gRPC Port: %v",
 					output.AppID,
 					output.AppHTTPPort,
 					output.AppGRPCPort)
 			}
 			utils.InfoStatusEvent(os.Stdout, startInfo)
 
-			output.AppCMD.Stdout = os.Stdout
-			output.AppCMD.Stderr = os.Stderr
+			output.SvrCMD.Stdout = os.Stdout
+			output.SvrCMD.Stderr = os.Stderr
 
-			err = output.AppCMD.Start()
+			err = output.SvrCMD.Start()
 			if err != nil {
 				utils.FailureStatusEvent(os.Stderr, err.Error())
 				os.Exit(1)
 			}
 
 			go func() {
-				svcErr := output.AppCMD.Wait()
+				svcErr := output.SvrCMD.Wait()
 
 				if svcErr != nil {
-					utils.FailureStatusEvent(os.Stderr, "The Bhojpur Application runtime process exited with error code: %s", svcErr.Error())
+					utils.FailureStatusEvent(os.Stderr, "Bhojpur Application runtime process exited with error code: %s", svcErr.Error())
 				} else {
 					utils.SuccessStatusEvent(os.Stdout, "Exited the Bhojpur Application runtime successfully")
 				}
@@ -227,14 +227,14 @@ appctl run --app-id myapp --app-port 3000 --app-protocol grpc -- go run main.go
 
 			stdErrPipe, pipeErr := output.AppCMD.StderrPipe()
 			if pipeErr != nil {
-				utils.FailureStatusEvent(os.Stderr, fmt.Sprintf("Error creating stderr for App: %s", pipeErr.Error()))
+				utils.FailureStatusEvent(os.Stderr, fmt.Sprintf("Error creating stderr for managed application: %s", pipeErr.Error()))
 				appRunning <- false
 				return
 			}
 
 			stdOutPipe, pipeErr := output.AppCMD.StdoutPipe()
 			if pipeErr != nil {
-				utils.FailureStatusEvent(os.Stderr, fmt.Sprintf("Error creating stdout for App: %s", pipeErr.Error()))
+				utils.FailureStatusEvent(os.Stderr, fmt.Sprintf("Error creating stdout for managed application: %s", pipeErr.Error()))
 				appRunning <- false
 				return
 			}
@@ -243,13 +243,13 @@ appctl run --app-id myapp --app-port 3000 --app-protocol grpc -- go run main.go
 			outScanner := bufio.NewScanner(stdOutPipe)
 			go func() {
 				for errScanner.Scan() {
-					fmt.Println(utils.Blue(fmt.Sprintf("== APP == %s", errScanner.Text())))
+					fmt.Println(utils.Blue(fmt.Sprintf("== MANAGED APPLICATION == %s", errScanner.Text())))
 				}
 			}()
 
 			go func() {
 				for outScanner.Scan() {
-					fmt.Println(utils.Blue(fmt.Sprintf("== APP == %s", outScanner.Text())))
+					fmt.Println(utils.Blue(fmt.Sprintf("== MANAGED APPLICATION == %s", outScanner.Text())))
 				}
 			}()
 
@@ -264,9 +264,9 @@ appctl run --app-id myapp --app-port 3000 --app-protocol grpc -- go run main.go
 				appErr := output.AppCMD.Wait()
 
 				if appErr != nil {
-					utils.FailureStatusEvent(os.Stderr, "The Bhojpur Application process exited with error code: %s", appErr.Error())
+					utils.FailureStatusEvent(os.Stderr, "Bhojpur Application process exited with error code: %s", appErr.Error())
 				} else {
-					utils.SuccessStatusEvent(os.Stdout, "Exited the Bhojpur Application successfully")
+					utils.SuccessStatusEvent(os.Stdout, "Exited managed Bhojpur Application successfully")
 				}
 				sigCh <- os.Interrupt
 			}()
@@ -279,9 +279,9 @@ appctl run --app-id myapp --app-port 3000 --app-protocol grpc -- go run main.go
 			// Start of Bhojpur Application failed, try to stop Bhojpur Application runtime and exit.
 			err = output.AppCMD.Process.Kill()
 			if err != nil {
-				utils.FailureStatusEvent(os.Stderr, fmt.Sprintf("Start of application failed, try to stop Bhojpur Application runtime Error: %s", err))
+				utils.FailureStatusEvent(os.Stderr, fmt.Sprintf("Start of managed application failed, try to stop Bhojpur Application runtime Error: %s", err))
 			} else {
-				utils.SuccessStatusEvent(os.Stdout, "Start of application failed, try to stop Bhojpur Application runtime successfully")
+				utils.SuccessStatusEvent(os.Stdout, "Start of managed application failed, try to stop Bhojpur Application runtime successfully")
 			}
 			os.Exit(1)
 		}
