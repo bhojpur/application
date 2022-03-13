@@ -65,8 +65,8 @@ import (
 	"github.com/bhojpur/service/pkg/utils/logger"
 
 	"github.com/bhojpur/application/pkg/actors"
-	operatorv1pb "github.com/bhojpur/application/pkg/api/v1/operator"
-	runtimev1pb "github.com/bhojpur/application/pkg/api/v1/runtime"
+	operatorv1pb "github.com/bhojpur/api/pkg/core/v1/operator"
+	runtimev1pb "github.com/bhojpur/api/pkg/core/v1/runtime"
 	"github.com/bhojpur/application/pkg/channel"
 	http_channel "github.com/bhojpur/application/pkg/channel/http"
 	"github.com/bhojpur/application/pkg/components"

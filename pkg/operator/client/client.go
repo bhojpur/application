@@ -29,7 +29,7 @@ import (
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials"
 
-	operatorv1pb "github.com/bhojpur/application/pkg/api/v1/operator"
+	operatorv1pb "github.com/bhojpur/api/pkg/core/v1/operator"
 	app_credentials "github.com/bhojpur/application/pkg/credentials"
 	diag "github.com/bhojpur/application/pkg/diagnostics"
 )

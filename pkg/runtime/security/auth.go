@@ -34,7 +34,7 @@ import (
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials"
 
-	sentryv1pb "github.com/bhojpur/application/pkg/api/v1/sentry"
+	sentryv1pb "github.com/bhojpur/api/pkg/core/v1/sentry"
 	app_credentials "github.com/bhojpur/application/pkg/credentials"
 	diag "github.com/bhojpur/application/pkg/diagnostics"
 )

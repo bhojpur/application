@@ -26,7 +26,7 @@ import (
 
 	"google.golang.org/grpc/peer"
 
-	v1pb "github.com/bhojpur/application/pkg/api/v1/placement"
+	v1pb "github.com/bhojpur/api/pkg/core/v1/placement"
 	"github.com/bhojpur/application/pkg/placement/monitoring"
 	"github.com/bhojpur/application/pkg/placement/raft"
 

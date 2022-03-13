@@ -31,7 +31,7 @@ import (
 	"google.golang.org/protobuf/types/known/anypb"
 
 	"github.com/bhojpur/application/pkg/actors"
-	runtimev1pb "github.com/bhojpur/application/pkg/api/v1/runtime"
+	runtimev1pb "github.com/bhojpur/api/pkg/core/v1/runtime"
 	appt "github.com/bhojpur/application/pkg/testing"
 )
 

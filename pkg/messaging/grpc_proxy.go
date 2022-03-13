@@ -33,7 +33,7 @@ import (
 	codec "github.com/bhojpur/application/pkg/grpc/proxy/codec"
 
 	"github.com/bhojpur/application/pkg/acl"
-	"github.com/bhojpur/application/pkg/api/v1/common"
+	"github.com/bhojpur/api/pkg/core/v1/common"
 	"github.com/bhojpur/application/pkg/config"
 	"github.com/bhojpur/application/pkg/diagnostics"
 )

@@ -34,7 +34,7 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/util/sets"
 
-	operatorv1pb "github.com/bhojpur/application/pkg/api/v1/operator"
+	operatorv1pb "github.com/bhojpur/api/pkg/core/v1/operator"
 )
 
 const (

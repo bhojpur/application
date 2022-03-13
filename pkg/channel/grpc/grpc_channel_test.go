@@ -32,7 +32,7 @@ import (
 	"github.com/stretchr/testify/assert"
 	"google.golang.org/grpc"
 
-	runtimev1pb "github.com/bhojpur/application/pkg/api/v1/runtime"
+	runtimev1pb "github.com/bhojpur/api/pkg/core/v1/runtime"
 	channelt "github.com/bhojpur/application/pkg/channel/testing"
 	invokev1 "github.com/bhojpur/application/pkg/messaging/v1"
 	auth "github.com/bhojpur/application/pkg/runtime/security"

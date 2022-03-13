@@ -1,10 +1,12 @@
-# Bhojpur Application - Validations
+# Bhojpur Application - Validations Library
 
-The Validations provides a means to [*validate*](https://en.wikipedia.org/wiki/Data_validation) [Bhojpur ORM](https://github.com/bhojpur/orm) models when creating and updating them.
+The `validations` framework provides a means to [*validate*](https://en.wikipedia.org/wiki/Data_validation)
+[Bhojpur ORM](https://github.com/bhojpur/orm) models when creating and updating them.
 
 ## Register ORM Callbacks
 
-Validations uses [Bhojpur ORM](https://github.com/bhojpur/orm) callbacks to handle *validations*, so you will need to register callbacks first:
+The `validations` library uses [Bhojpur ORM](https://github.com/bhojpur/orm) callbacks to handle
+*validations*, so you will need to register callbacks first:
 
 ```go
 import (
@@ -21,7 +23,9 @@ func main() {
 
 ### Usage
 
-After callbacks have been registered, attempting to create or update any record will trigger the `Validate` method that you have implemented for your model. If your implementation adds or returns an error, the attempt will be aborted.
+After `callbacks` have been registered, attempting to create or update any record will trigger the `Validate`
+method that you have implemented for your model. If your implementation adds or returns an error, the attempt
+will be aborted.
 
 ```go
 type User struct {
@@ -56,9 +60,11 @@ db.Create(&User{}).GetErrors() // => []error{"age need to be 18+", "name can't b
 
 ## [Bhojpur Errors](https://github.com/bhojpur/errors/pkg/validation) integration
 
-The application [Validations](https://github.com/bhojpur/application/pkg/validations) supports [Bhojpur Errors](https://github.com/bhojpur/errors/pkg/validation), so you could add a tag into your struct for some common *validations*, such as *check required*, *numeric*, *length*, etc.
+The application [validations](https://github.com/bhojpur/application/pkg/validations) supports
+[Bhojpur Errors](https://github.com/bhojpur/errors/pkg/validation), so you could add a tag into your
+struct for some common *validations*, such as *check required*, *numeric*, *length*, etc.
 
-```
+```go
 type User struct {
   orm.Model
   Name           string `valid:"required"`
@@ -70,7 +76,8 @@ type User struct {
 
 ## Customize errors on form field
 
-If you want to display errors for each form field in [Bhojpur CMS](http://github.com/bhojpur/cms), you could register your errors like this:
+If you want to display errors for each form field in [Bhojpur CMS](http://github.com/bhojpur/cms),
+you could register your errors like this:
 
 ```go
 func (user User) Validate(db *orm.DB) {

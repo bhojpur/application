@@ -39,8 +39,8 @@ import (
 
 	"github.com/bhojpur/service/pkg/utils/retry"
 
-	operatorv1pb "github.com/bhojpur/application/pkg/api/v1/operator"
-	runtimev1pb "github.com/bhojpur/application/pkg/api/v1/runtime"
+	operatorv1pb "github.com/bhojpur/api/pkg/core/v1/operator"
+	runtimev1pb "github.com/bhojpur/api/pkg/core/v1/runtime"
 	"github.com/bhojpur/application/pkg/channel"
 	"github.com/bhojpur/application/pkg/expr"
 	subscriptionsapi_v1alpha1 "github.com/bhojpur/application/pkg/kubernetes/subscriptions/v1alpha1"

@@ -46,9 +46,9 @@ import (
 	"google.golang.org/protobuf/types/known/anypb"
 	"google.golang.org/protobuf/types/known/emptypb"
 
-	commonv1pb "github.com/bhojpur/application/pkg/api/v1/common"
-	internalv1pb "github.com/bhojpur/application/pkg/api/v1/internals"
-	runtimev1pb "github.com/bhojpur/application/pkg/api/v1/runtime"
+	commonv1pb "github.com/bhojpur/api/pkg/core/v1/common"
+	internalv1pb "github.com/bhojpur/api/pkg/core/v1/internals"
+	runtimev1pb "github.com/bhojpur/api/pkg/core/v1/runtime"
 	channelt "github.com/bhojpur/application/pkg/channel/testing"
 	"github.com/bhojpur/application/pkg/config"
 	diag "github.com/bhojpur/application/pkg/diagnostics"

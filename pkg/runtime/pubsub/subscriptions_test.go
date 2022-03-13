@@ -38,8 +38,8 @@ import (
 	"google.golang.org/protobuf/types/known/emptypb"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 
-	operatorv1pb "github.com/bhojpur/application/pkg/api/v1/operator"
-	runtimev1pb "github.com/bhojpur/application/pkg/api/v1/runtime"
+	operatorv1pb "github.com/bhojpur/api/pkg/core/v1/operator"
+	runtimev1pb "github.com/bhojpur/api/pkg/core/v1/runtime"
 	"github.com/bhojpur/application/pkg/channel"
 	subscriptionsapi_v1alpha1 "github.com/bhojpur/application/pkg/kubernetes/subscriptions/v1alpha1"
 	subscriptionsapi_v2alpha1 "github.com/bhojpur/application/pkg/kubernetes/subscriptions/v2alpha1"

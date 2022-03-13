@@ -28,7 +28,7 @@ import (
 	"net"
 	"net/http"
 
-	"github.com/bhojpur/application/pkg/api"
+	apisvr "github.com/bhojpur/api/pkg/core"
 	"github.com/bhojpur/application/pkg/utils"
 )
 
@@ -71,7 +71,7 @@ func (s *Standalone) Invoke(appID, method string, data []byte, verb string, path
 }
 
 func makeEndpoint(lo ListOutput, method string) string {
-	return fmt.Sprintf("http://127.0.0.1:%s/v%s/invoke/%s/method/%s", fmt.Sprintf("%v", lo.HTTPPort), api.RuntimeAPIVersion, lo.AppID, method)
+	return fmt.Sprintf("http://127.0.0.1:%s/v%s/invoke/%s/method/%s", fmt.Sprintf("%v", lo.HTTPPort), apisvr.RuntimeAPIVersion, lo.AppID, method)
 }
 
 func handleResponse(response *http.Response) (string, error) {

@@ -62,8 +62,8 @@ import (
 	"github.com/bhojpur/service/pkg/secretstores"
 	"github.com/bhojpur/service/pkg/state"
 
-	operatorv1pb "github.com/bhojpur/application/pkg/api/v1/operator"
-	runtimev1pb "github.com/bhojpur/application/pkg/api/v1/runtime"
+	operatorv1pb "github.com/bhojpur/api/pkg/core/v1/operator"
+	runtimev1pb "github.com/bhojpur/api/pkg/core/v1/runtime"
 	channelt "github.com/bhojpur/application/pkg/channel/testing"
 	bindings_loader "github.com/bhojpur/application/pkg/components/bindings"
 	nr_loader "github.com/bhojpur/application/pkg/components/nameresolution"

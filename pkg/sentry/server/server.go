@@ -34,7 +34,7 @@ import (
 
 	"github.com/bhojpur/service/pkg/utils/logger"
 
-	sentryv1pb "github.com/bhojpur/application/pkg/api/v1/sentry"
+	sentryv1pb "github.com/bhojpur/api/pkg/core/v1/sentry"
 	"github.com/bhojpur/application/pkg/sentry/ca"
 	"github.com/bhojpur/application/pkg/sentry/certs"
 	"github.com/bhojpur/application/pkg/sentry/csr"

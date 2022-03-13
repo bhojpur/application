@@ -32,11 +32,11 @@ import (
 
 	retryablehttp "github.com/hashicorp/go-retryablehttp"
 
-	"github.com/bhojpur/application/pkg/api"
+	apisvr "github.com/bhojpur/api/pkg/core"
 )
 
 // Get retrieves the metadata of a given Bhojpur Application's sidecar.
-func Get(httpPort int, appID, socket string) (*api.Metadata, error) {
+func Get(httpPort int, appID, socket string) (*apisvr.Metadata, error) {
 	url := makeMetadataGetEndpoint(httpPort)
 
 	var httpc http.Client
@@ -101,25 +101,25 @@ func Put(httpPort int, key, value, appID, socket string) error {
 
 func makeMetadataGetEndpoint(httpPort int) string {
 	if httpPort == 0 {
-		return fmt.Sprintf("http://unix/v%s/metadata", api.RuntimeAPIVersion)
+		return fmt.Sprintf("http://unix/v%s/metadata", apisvr.RuntimeAPIVersion)
 	}
-	return fmt.Sprintf("http://127.0.0.1:%v/v%s/metadata", httpPort, api.RuntimeAPIVersion)
+	return fmt.Sprintf("http://127.0.0.1:%v/v%s/metadata", httpPort, apisvr.RuntimeAPIVersion)
 }
 
 func makeMetadataPutEndpoint(httpPort int, key string) string {
 	if httpPort == 0 {
-		return fmt.Sprintf("http://unix/v%s/metadata/%s", api.RuntimeAPIVersion, key)
+		return fmt.Sprintf("http://unix/v%s/metadata/%s", apisvr.RuntimeAPIVersion, key)
 	}
-	return fmt.Sprintf("http://127.0.0.1:%v/v%s/metadata/%s", httpPort, api.RuntimeAPIVersion, key)
+	return fmt.Sprintf("http://127.0.0.1:%v/v%s/metadata/%s", httpPort, apisvr.RuntimeAPIVersion, key)
 }
 
-func handleMetadataResponse(response *http.Response) (*api.Metadata, error) {
+func handleMetadataResponse(response *http.Response) (*apisvr.Metadata, error) {
 	rb, err := ioutil.ReadAll(response.Body)
 	if err != nil {
 		return nil, err
 	}
 
-	var m api.Metadata
+	var m apisvr.Metadata
 	err = json.Unmarshal(rb, &m)
 	if err != nil {
 		return nil, err

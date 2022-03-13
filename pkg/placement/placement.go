@@ -35,7 +35,7 @@ import (
 
 	"github.com/bhojpur/service/pkg/utils/logger"
 
-	placementv1pb "github.com/bhojpur/application/pkg/api/v1/placement"
+	placementv1pb "github.com/bhojpur/api/pkg/core/v1/placement"
 	app_credentials "github.com/bhojpur/application/pkg/credentials"
 	"github.com/bhojpur/application/pkg/placement/raft"
 )

@@ -48,8 +48,8 @@ import (
 	"github.com/bhojpur/service/pkg/utils/logger"
 
 	"github.com/bhojpur/application/pkg/actors/internal"
-	commonv1pb "github.com/bhojpur/application/pkg/api/v1/common"
-	internalv1pb "github.com/bhojpur/application/pkg/api/v1/internals"
+	commonv1pb "github.com/bhojpur/api/pkg/core/v1/common"
+	internalv1pb "github.com/bhojpur/api/pkg/core/v1/internals"
 	"github.com/bhojpur/application/pkg/channel"
 	"github.com/bhojpur/application/pkg/concurrency"
 	configuration "github.com/bhojpur/application/pkg/config"

@@ -25,7 +25,7 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
-	"github.com/bhojpur/application/pkg/api/v1/common"
+	"github.com/bhojpur/api/pkg/core/v1/common"
 	"github.com/bhojpur/application/pkg/config"
 )
 

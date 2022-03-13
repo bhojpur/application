@@ -33,7 +33,7 @@ import (
 
 	"github.com/bhojpur/service/pkg/utils/logger"
 
-	commonv1pb "github.com/bhojpur/application/pkg/api/v1/common"
+	commonv1pb "github.com/bhojpur/api/pkg/core/v1/common"
 	"github.com/bhojpur/application/pkg/config"
 	diag "github.com/bhojpur/application/pkg/diagnostics"
 )

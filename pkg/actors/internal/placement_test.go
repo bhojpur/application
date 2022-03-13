@@ -35,7 +35,7 @@ import (
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 
-	placementv1pb "github.com/bhojpur/application/pkg/api/v1/placement"
+	placementv1pb "github.com/bhojpur/api/pkg/core/v1/placement"
 	"github.com/bhojpur/application/pkg/placement/hashing"
 )
 

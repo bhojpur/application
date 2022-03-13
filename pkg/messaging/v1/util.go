@@ -37,7 +37,7 @@ import (
 	"google.golang.org/protobuf/encoding/protojson"
 	"google.golang.org/protobuf/reflect/protoreflect"
 
-	internalv1pb "github.com/bhojpur/application/pkg/api/v1/internals"
+	internalv1pb "github.com/bhojpur/api/pkg/core/v1/internals"
 	diag "github.com/bhojpur/application/pkg/diagnostics"
 	diag_utils "github.com/bhojpur/application/pkg/diagnostics/utils"
 )

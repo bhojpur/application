@@ -34,7 +34,7 @@ import (
 	"k8s.io/apimachinery/pkg/runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client/fake"
 
-	operatorv1pb "github.com/bhojpur/application/pkg/api/v1/operator"
+	operatorv1pb "github.com/bhojpur/api/pkg/core/v1/operator"
 	"github.com/bhojpur/application/pkg/client/clientset/versioned/scheme"
 	componentsapi "github.com/bhojpur/application/pkg/kubernetes/components/v1alpha1"
 )

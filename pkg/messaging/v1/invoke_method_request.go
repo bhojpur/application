@@ -27,8 +27,8 @@ import (
 	"github.com/valyala/fasthttp"
 	"google.golang.org/protobuf/types/known/anypb"
 
-	commonv1pb "github.com/bhojpur/application/pkg/api/v1/common"
-	internalv1pb "github.com/bhojpur/application/pkg/api/v1/internals"
+	commonv1pb "github.com/bhojpur/api/pkg/core/v1/common"
+	internalv1pb "github.com/bhojpur/api/pkg/core/v1/internals"
 )
 
 const (

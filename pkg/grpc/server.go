@@ -36,8 +36,8 @@ import (
 
 	"github.com/bhojpur/service/pkg/utils/logger"
 
-	internalv1pb "github.com/bhojpur/application/pkg/api/v1/internals"
-	runtimev1pb "github.com/bhojpur/application/pkg/api/v1/runtime"
+	internalv1pb "github.com/bhojpur/api/pkg/core/v1/internals"
+	runtimev1pb "github.com/bhojpur/api/pkg/core/v1/runtime"
 	"github.com/bhojpur/application/pkg/config"
 	diag "github.com/bhojpur/application/pkg/diagnostics"
 	diag_utils "github.com/bhojpur/application/pkg/diagnostics/utils"

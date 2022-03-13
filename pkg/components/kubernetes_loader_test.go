@@ -32,7 +32,7 @@ import (
 	"github.com/stretchr/testify/assert"
 	"google.golang.org/grpc"
 
-	operatorv1pb "github.com/bhojpur/application/pkg/api/v1/operator"
+	operatorv1pb "github.com/bhojpur/api/pkg/core/v1/operator"
 	config "github.com/bhojpur/application/pkg/config/modes"
 	"github.com/bhojpur/application/pkg/kubernetes/components/v1alpha1"
 	subscriptions "github.com/bhojpur/application/pkg/kubernetes/subscriptions/v1alpha1"

@@ -1,12 +1,14 @@
 # Bhojpur Application - Role Management
 
-The application `Roles` is an [authorization](https://en.wikipedia.org/wiki/Authorization) library. It also integrates nicely with the [Bhojpur CMS](http://github.com/bhojpur/cms).
+The application `Roles` is an [authorization](https://en.wikipedia.org/wiki/Authorization) library.
+It also integrates nicely with the [Bhojpur CMS](http://github.com/bhojpur/cms).
 
 ## Usage
 
 ### Permission Modes
 
-The permission modes are really the *roles* in [Roles](https://github.com/bhojpur/application/pkg/roles). The application [Roles](https://github.com/bhojpur/application/pkg/roles) has five default permission modes:
+The permission modes are really the *roles* in [Roles](https://github.com/bhojpur/application/pkg/roles).
+The application [Roles](https://github.com/bhojpur/application/pkg/roles) has five default permission modes:
 
 - roles.Read
 - roles.Update
@@ -72,7 +74,8 @@ cond2(yes)->allowed1
 cond2(no)->denied1
 ```
 
-Please note that, when using application [Roles](https://github.com/bhojpur/application/pkg/roles) with Bhojpur CMS - [L10N](http://github.com/bhojpur/cms/pkg/l10n). Therefore,
+Please note that, when using application [Roles](https://github.com/bhojpur/application/pkg/roles) with
+Bhojpur CMS - [L10N](http://github.com/bhojpur/cms/pkg/l10n). Therefore,
 
 ```go
 // allows the admin role through and rejects ALL other roles.

@@ -28,7 +28,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/briandowns/spinner"
+	"github.com/bhojpur/service/pkg/utils/spinner"
 	"github.com/fatih/color"
 )
 

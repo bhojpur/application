@@ -132,7 +132,7 @@ func TestGetVersionsGithub(t *testing.T) {
 	})
 
 	t.Run("error on bad addr", func(t *testing.T) {
-		version, err := GetLatestReleaseGithub("http://a.super.non.existant.domain/")
+		version, err := GetLatestReleaseGithub("http://a.super.non.existent.domain/")
 		assert.Equal(t, "", version)
 		assert.Error(t, err)
 	})

@@ -40,9 +40,9 @@ import (
 
 	"github.com/bhojpur/application/pkg/acl"
 	"github.com/bhojpur/application/pkg/actors"
-	commonv1pb "github.com/bhojpur/application/pkg/api/v1/common"
-	internalv1pb "github.com/bhojpur/application/pkg/api/v1/internals"
-	runtimev1pb "github.com/bhojpur/application/pkg/api/v1/runtime"
+	commonv1pb "github.com/bhojpur/api/pkg/core/v1/common"
+	internalv1pb "github.com/bhojpur/api/pkg/core/v1/internals"
+	runtimev1pb "github.com/bhojpur/api/pkg/core/v1/runtime"
 	"github.com/bhojpur/application/pkg/channel"
 	state_loader "github.com/bhojpur/application/pkg/components/state"
 	"github.com/bhojpur/application/pkg/concurrency"

@@ -28,7 +28,7 @@ import (
 	"github.com/hashicorp/raft"
 	"github.com/pkg/errors"
 
-	v1pb "github.com/bhojpur/application/pkg/api/v1/placement"
+	v1pb "github.com/bhojpur/api/pkg/core/v1/placement"
 )
 
 // CommandType is the type of raft command in log entry.

@@ -36,8 +36,8 @@ import (
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 
-	commonv1pb "github.com/bhojpur/application/pkg/api/v1/common"
-	internalv1pb "github.com/bhojpur/application/pkg/api/v1/internals"
+	commonv1pb "github.com/bhojpur/api/pkg/core/v1/common"
+	internalv1pb "github.com/bhojpur/api/pkg/core/v1/internals"
 	"github.com/bhojpur/application/pkg/channel"
 	"github.com/bhojpur/application/pkg/config"
 	diag "github.com/bhojpur/application/pkg/diagnostics"

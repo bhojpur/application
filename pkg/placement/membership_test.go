@@ -29,7 +29,7 @@ import (
 	"github.com/stretchr/testify/assert"
 	"google.golang.org/grpc"
 
-	v1pb "github.com/bhojpur/application/pkg/api/v1/placement"
+	v1pb "github.com/bhojpur/api/pkg/core/v1/placement"
 	"github.com/bhojpur/application/pkg/placement/raft"
 )
 

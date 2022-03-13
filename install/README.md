@@ -6,13 +6,13 @@ It provides ability to install key Bhojpur Application CLI software utilities.
 
 ### Get the latest stable version
 
-```
+```sh
 powershell -Command "iwr -useb https://raw.githubusercontent.com/bhojpur/application/master/install/install.ps1 | iex"
 ```
 
 ### Get the specific version
 
-```
+```sh
 powershell -Command "$script=iwr -useb https://raw.githubusercontent.com/bhojpur/application/master/install/install.ps1; $block=[ScriptBlock]::Create($script); invoke-command -ScriptBlock $block -ArgumentList <Version>"
 ```
 
@@ -20,13 +20,13 @@ powershell -Command "$script=iwr -useb https://raw.githubusercontent.com/bhojpur
 
 ### Get the latest stable version
 
-```
+```sh
 curl -fsSL https://raw.githubusercontent.com/bhojpur/application/master/install/install.sh | /bin/bash
 ```
 
 ### Get the specific version
 
-```
+```sh
 curl -fsSL https://raw.githubusercontent.com/bhojpur/application/master/install/install.sh | /bin/bash -s <Version>
 ```
 
@@ -34,13 +34,13 @@ curl -fsSL https://raw.githubusercontent.com/bhojpur/application/master/install/
 
 ### Get the latest stable version
 
-```
+```sh
 wget -q https://raw.githubusercontent.com/bhojpur/application/master/install/install.sh -O - | /bin/bash
 ```
 
 ### Get the specific version
 
-```
+```sh
 wget -q https://raw.githubusercontent.com/bhojpur/application/master/install/install.sh -O - | /bin/bash -s <Version>
 ```
 

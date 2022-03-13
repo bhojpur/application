@@ -29,7 +29,7 @@ import (
 
 	"github.com/bhojpur/service/pkg/utils/logger"
 
-	operatorv1pb "github.com/bhojpur/application/pkg/api/v1/operator"
+	operatorv1pb "github.com/bhojpur/api/pkg/core/v1/operator"
 	config "github.com/bhojpur/application/pkg/config/modes"
 	components_v1alpha1 "github.com/bhojpur/application/pkg/kubernetes/components/v1alpha1"
 )

@@ -29,7 +29,7 @@ import (
 	"net"
 	"net/http"
 
-	"github.com/bhojpur/application/pkg/api"
+	apisvr "github.com/bhojpur/api/pkg/core"
 	"github.com/bhojpur/application/pkg/utils"
 )
 
@@ -57,7 +57,7 @@ func (s *Standalone) Publish(publishAppID, pubsubName, topic string, payload []b
 		return err
 	}
 
-	url := fmt.Sprintf("http://unix/v%s/publish/%s/%s", api.RuntimeAPIVersion, pubsubName, topic)
+	url := fmt.Sprintf("http://unix/v%s/publish/%s/%s", apisvr.RuntimeAPIVersion, pubsubName, topic)
 
 	var httpc http.Client
 	if socket != "" {
@@ -67,7 +67,7 @@ func (s *Standalone) Publish(publishAppID, pubsubName, topic string, payload []b
 			},
 		}
 	} else {
-		url = fmt.Sprintf("http://localhost:%s/v%s/publish/%s/%s", fmt.Sprintf("%v", instance.HTTPPort), api.RuntimeAPIVersion, pubsubName, topic)
+		url = fmt.Sprintf("http://localhost:%s/v%s/publish/%s/%s", fmt.Sprintf("%v", instance.HTTPPort), apisvr.RuntimeAPIVersion, pubsubName, topic)
 	}
 
 	contentType := "application/json"

@@ -28,8 +28,8 @@ import (
 	"google.golang.org/protobuf/types/known/anypb"
 	"google.golang.org/protobuf/types/known/emptypb"
 
-	commonv1pb "github.com/bhojpur/application/pkg/api/v1/common"
-	runtimev1pb "github.com/bhojpur/application/pkg/api/v1/runtime"
+	commonv1pb "github.com/bhojpur/api/pkg/core/v1/common"
+	runtimev1pb "github.com/bhojpur/api/pkg/core/v1/runtime"
 )
 
 // MockServer implementation of fake user Bhojpur Application server.

@@ -26,10 +26,10 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
-	"github.com/bhojpur/application/pkg/api"
+	apisvr "github.com/bhojpur/api/pkg/core"
 )
 
 func TestMakeMetadataGetEndpoint(t *testing.T) {
 	actual := makeMetadataGetEndpoint(9999)
-	assert.Equal(t, fmt.Sprintf("http://127.0.0.1:9999/v%s/metadata", api.RuntimeAPIVersion), actual, "expected strings to match")
+	assert.Equal(t, fmt.Sprintf("http://127.0.0.1:9999/v%s/metadata", apisvr.RuntimeAPIVersion), actual, "expected strings to match")
 }

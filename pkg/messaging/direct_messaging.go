@@ -41,7 +41,7 @@ import (
 	diag_utils "github.com/bhojpur/application/pkg/diagnostics/utils"
 	"github.com/bhojpur/application/pkg/utils"
 
-	internalv1pb "github.com/bhojpur/application/pkg/api/v1/internals"
+	internalv1pb "github.com/bhojpur/api/pkg/core/v1/internals"
 	invokev1 "github.com/bhojpur/application/pkg/messaging/v1"
 )
 

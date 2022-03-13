@@ -21,7 +21,7 @@ package grpc
 // THE SOFTWARE.
 
 import (
-	commonv1pb "github.com/bhojpur/application/pkg/api/v1/common"
+	commonv1pb "github.com/bhojpur/api/pkg/core/v1/common"
 )
 
 func stateConsistencyToString(c commonv1pb.StateOptions_StateConsistency) string {

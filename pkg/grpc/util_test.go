@@ -25,7 +25,7 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
-	commonv1pb "github.com/bhojpur/application/pkg/api/v1/common"
+	commonv1pb "github.com/bhojpur/api/pkg/core/v1/common"
 )
 
 func TestConsistency(t *testing.T) {

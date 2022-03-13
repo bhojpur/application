@@ -44,7 +44,7 @@ import (
 	corev1 "k8s.io/api/core/v1"
 	v1 "k8s.io/apiextensions-apiserver/pkg/apis/apiextensions/v1"
 
-	operatorv1pb "github.com/bhojpur/application/pkg/api/v1/operator"
+	operatorv1pb "github.com/bhojpur/api/pkg/core/v1/operator"
 	app_credentials "github.com/bhojpur/application/pkg/credentials"
 	componentsapi "github.com/bhojpur/application/pkg/kubernetes/components/v1alpha1"
 	configurationapi "github.com/bhojpur/application/pkg/kubernetes/configuration/v1alpha1"

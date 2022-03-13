@@ -28,7 +28,7 @@ import (
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 
-	"github.com/bhojpur/application/pkg/api"
+	apisvr "github.com/bhojpur/api/pkg/core"
 	"github.com/bhojpur/application/pkg/standalone"
 	"github.com/bhojpur/application/pkg/utils"
 )
@@ -56,7 +56,7 @@ var rootCmd = &cobra.Command{
 // Execute adds all child commands to the root command.
 func Execute(version, apiVersion string) {
 	rootCmd.Version = version
-	api.RuntimeAPIVersion = apiVersion
+	apisvr.RuntimeAPIVersion = apiVersion
 
 	cobra.OnInitialize(initConfig)
 

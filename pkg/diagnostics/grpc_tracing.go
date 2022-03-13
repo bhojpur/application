@@ -34,8 +34,8 @@ import (
 	"google.golang.org/grpc/metadata"
 	"google.golang.org/grpc/status"
 
-	internalv1pb "github.com/bhojpur/application/pkg/api/v1/internals"
-	runtimev1pb "github.com/bhojpur/application/pkg/api/v1/runtime"
+	internalv1pb "github.com/bhojpur/api/pkg/core/v1/internals"
+	runtimev1pb "github.com/bhojpur/api/pkg/core/v1/runtime"
 	"github.com/bhojpur/application/pkg/config"
 	diag_utils "github.com/bhojpur/application/pkg/diagnostics/utils"
 )
@@ -59,10 +59,10 @@ func GRPCTraceUnaryServerInterceptor(appID string, spec config.TracingSpec) grpc
 		// This middleware is shared by internal gRPC for service invocation and api
 		// so that it needs to handle separately.
 		if isInternalCalls(info.FullMethod) {
-			// For pkg.api.v1.internals package, this generates ServerSpan.
+			// For pkg.core.v1.internals package, this generates ServerSpan.
 			spanKind = trace.WithSpanKind(trace.SpanKindServer)
 		} else {
-			// For pkg.api.v1.runtime package, this generates ClientSpan.
+			// For pkg.core.v1.runtime package, this generates ClientSpan.
 			spanKind = trace.WithSpanKind(trace.SpanKindClient)
 		}
 

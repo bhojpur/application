@@ -29,8 +29,8 @@ import (
 	"google.golang.org/grpc/metadata"
 	"google.golang.org/grpc/status"
 
-	internalv1pb "github.com/bhojpur/application/pkg/api/v1/internals"
-	runtimev1pb "github.com/bhojpur/application/pkg/api/v1/runtime"
+	internalv1pb "github.com/bhojpur/api/pkg/core/v1/internals"
+	runtimev1pb "github.com/bhojpur/api/pkg/core/v1/runtime"
 	"github.com/bhojpur/application/pkg/channel"
 	"github.com/bhojpur/application/pkg/config"
 	invokev1 "github.com/bhojpur/application/pkg/messaging/v1"
