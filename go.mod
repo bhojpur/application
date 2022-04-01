@@ -217,7 +217,7 @@ require (
 
 require (
 	cloud.google.com/go/compute v1.5.0 // indirect
-	contrib.go.opencensus.io/exporter/prometheus v0.4.0
+	contrib.go.opencensus.io/exporter/prometheus v0.4.1
 	contrib.go.opencensus.io/exporter/zipkin v0.1.2
 	github.com/AdhityaRamadhanus/fasthttpcors v0.0.0-20170121111917-d4c07198763a
 	github.com/Azure/go-ansiterm v0.0.0-20210617225240-d185dfc1b5a1 // indirect
