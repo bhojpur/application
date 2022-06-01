@@ -37,8 +37,8 @@ require (
 	github.com/stretchr/testify v1.7.0
 	go.uber.org/automaxprocs v1.4.0
 	golang.org/x/sys v0.0.0-20220310020820-b874c991c1a5
-	google.golang.org/grpc v1.45.0
-	google.golang.org/protobuf v1.27.1
+	google.golang.org/grpc v1.46.0
+	google.golang.org/protobuf v1.28.0
 	gopkg.in/yaml.v2 v2.4.0
 	helm.sh/helm/v3 v3.8.0
 	k8s.io/api v0.23.4
@@ -237,7 +237,7 @@ require (
 	github.com/PuerkitoBio/purell v1.1.1
 	github.com/PuerkitoBio/urlesc v0.0.0-20170810143723-de5bf2ad4578 // indirect
 	github.com/andybalholm/brotli v1.0.4 // indirect
-	github.com/antlr/antlr4/runtime/Go/antlr v0.0.0-20220209173558-ad29539cd2e9 // indirect
+	github.com/antlr/antlr4/runtime/Go/antlr v0.0.0-20220418222510-f25a4f6275ed // indirect
 	github.com/armon/go-metrics v0.3.10 // indirect
 	github.com/asaskevich/govalidator v0.0.0-20210307081110-f21760c49a8d // indirect
 	github.com/aymerick/douceur v0.2.0 // indirect
@@ -275,7 +275,7 @@ require (
 	github.com/golang/groupcache v0.0.0-20210331224755-41bb18bfe9da // indirect
 	github.com/golang/protobuf v1.5.2
 	github.com/google/btree v1.0.1 // indirect
-	github.com/google/cel-go v0.9.0
+	github.com/google/cel-go v0.11.4
 	github.com/google/go-cmp v0.5.7
 	github.com/google/gofuzz v1.2.0 // indirect
 	github.com/google/shlex v0.0.0-20191202100458-e7afc7fbc510 // indirect
@@ -375,7 +375,7 @@ require (
 	golang.org/x/xerrors v0.0.0-20200804184101-5ec99f83aff1 // indirect
 	gomodules.xyz/jsonpatch/v2 v2.2.0 // indirect
 	google.golang.org/appengine v1.6.7 // indirect
-	google.golang.org/genproto v0.0.0-20220308174144-ae0e22291548
+	google.golang.org/genproto v0.0.0-20220502173005-c8bf987b8c21
 	gopkg.in/inf.v0 v0.9.1 // indirect
 	gopkg.in/ini.v1 v1.66.4 // indirect
 	gopkg.in/yaml.v3 v3.0.0-20210107192922-496545a6307b // indirect
