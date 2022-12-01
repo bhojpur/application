@@ -24,7 +24,7 @@ require (
 	github.com/mattn/go-sqlite3 v1.14.10
 	github.com/microcosm-cc/bluemonday v1.0.18
 	github.com/mitchellh/go-ps v1.0.0
-	github.com/mitchellh/mapstructure v1.4.3
+	github.com/mitchellh/mapstructure v1.5.0
 	github.com/nightlyone/lockfile v1.0.0
 	github.com/olekukonko/tablewriter v0.0.5
 	github.com/phayes/freeport v0.0.0-20220201140144-74d24b5ae9f5
