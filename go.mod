@@ -34,7 +34,7 @@ require (
 	github.com/sirupsen/logrus v1.8.1
 	github.com/spf13/cobra v1.3.0
 	github.com/spf13/viper v1.10.1
-	github.com/stretchr/testify v1.7.0
+	github.com/stretchr/testify v1.8.1
 	go.uber.org/automaxprocs v1.4.0
 	golang.org/x/sys v0.0.0-20220310020820-b874c991c1a5
 	google.golang.org/grpc v1.45.0
@@ -346,7 +346,7 @@ require (
 	github.com/spf13/jwalterweatherman v1.1.0 // indirect
 	github.com/spf13/pflag v1.0.5 // indirect
 	github.com/stoewer/go-strcase v1.2.0 // indirect
-	github.com/stretchr/objx v0.3.0 // indirect
+	github.com/stretchr/objx v0.5.0 // indirect
 	github.com/subosito/gotenv v1.2.0 // indirect
 	github.com/tklauser/go-sysconf v0.3.9 // indirect
 	github.com/tklauser/numcpus v0.4.0 // indirect
@@ -378,7 +378,7 @@ require (
 	google.golang.org/genproto v0.0.0-20220308174144-ae0e22291548
 	gopkg.in/inf.v0 v0.9.1 // indirect
 	gopkg.in/ini.v1 v1.66.4 // indirect
-	gopkg.in/yaml.v3 v3.0.0-20210107192922-496545a6307b // indirect
+	gopkg.in/yaml.v3 v3.0.1 // indirect
 	gotest.tools/v3 v3.1.0 // indirect
 	k8s.io/apiserver v0.23.4 // indirect
 	k8s.io/component-base v0.23.4 // indirect
