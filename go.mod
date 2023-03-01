@@ -362,7 +362,7 @@ require (
 	go.opentelemetry.io/otel v1.4.1
 	go.opentelemetry.io/otel/trace v1.4.1 // indirect
 	go.starlark.net v0.0.0-20220228154907-c8e9b32ba2fb // indirect
-	go.uber.org/atomic v1.9.0
+	go.uber.org/atomic v1.10.0
 	golang.org/x/crypto v0.0.0-20220313003712-b769efc7c000 // indirect
 	golang.org/x/mod v0.5.1 // indirect
 	golang.org/x/net v0.0.0-20220225172249-27dd8689420f
