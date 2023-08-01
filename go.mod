@@ -10,7 +10,7 @@ require (
 	github.com/bhojpur/orm v0.0.1
 	github.com/bhojpur/service v0.0.6
 	github.com/cenkalti/backoff/v4 v4.1.2
-	github.com/docker/docker v20.10.12+incompatible
+	github.com/docker/docker v24.0.5+incompatible
 	github.com/fatih/color v1.13.0
 	github.com/ghodss/yaml v1.0.0
 	github.com/go-sql-driver/mysql v1.6.0
