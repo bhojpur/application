@@ -13,7 +13,7 @@ require (
 	github.com/docker/docker v20.10.12+incompatible
 	github.com/fatih/color v1.13.0
 	github.com/ghodss/yaml v1.0.0
-	github.com/go-sql-driver/mysql v1.6.0
+	github.com/go-sql-driver/mysql v1.7.1
 	github.com/gocarina/gocsv v0.0.0-20211203214250-4735fba0c1d9
 	github.com/gopherjs/gopherjs v0.0.0-20220221023154-0b2280d3ff96
 	github.com/gosimple/slug v1.12.0
