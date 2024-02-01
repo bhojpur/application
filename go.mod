@@ -36,7 +36,7 @@ require (
 	github.com/spf13/viper v1.10.1
 	github.com/stretchr/testify v1.7.0
 	go.uber.org/automaxprocs v1.4.0
-	golang.org/x/sys v0.0.0-20220310020820-b874c991c1a5
+	golang.org/x/sys v0.16.0
 	google.golang.org/grpc v1.45.0
 	google.golang.org/protobuf v1.27.1
 	gopkg.in/yaml.v2 v2.4.0
