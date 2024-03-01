@@ -21,7 +21,7 @@ require (
 	github.com/hashicorp/go-retryablehttp v0.5.3
 	github.com/hashicorp/go-version v1.4.0
 	github.com/lib/pq v1.10.4
-	github.com/mattn/go-sqlite3 v1.14.10
+	github.com/mattn/go-sqlite3 v1.14.22
 	github.com/microcosm-cc/bluemonday v1.0.18
 	github.com/mitchellh/go-ps v1.0.0
 	github.com/mitchellh/mapstructure v1.4.3
